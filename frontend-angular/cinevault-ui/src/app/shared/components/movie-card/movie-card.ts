@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { Movie } from '../../../core/models/movie.model';
 
 @Component({
   selector: 'app-movie-card',
-  imports: [],
+  standalone: true,
+  imports: [RouterLink],
   templateUrl: './movie-card.html',
   styleUrl: './movie-card.scss',
 })
-export class MovieCard {}
+export class MovieCardComponent {
+  @Input({ required: true }) movie!: Movie;
+}

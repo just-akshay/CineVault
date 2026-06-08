@@ -1,4 +1,12 @@
 <section class="movie-row">
-  <h2>Movie Row</h2>
-  <p>Movie cards will appear here.</p>
+  <div class="movie-row__header">
+    <h2>{{ title }}</h2>
+    <span>{{ movies.length }} movies</span>
+  </div>
+
+  <div class="movie-row__scroller">
+    @for (movie of movies; track movie.id) {
+      <app-movie-card [movie]="movie" />
+    }
+  </div>
 </section>

@@ -1,4 +1,20 @@
-<section class="hero-banner">
-  <h1>Featured Movie</h1>
-  <p>Hero banner will appear here.</p>
+<section
+  class="hero-banner"
+  [style.background-image]="'linear-gradient(90deg, #0a0a0c 0%, rgba(10, 10, 12, 0.76) 42%, rgba(10, 10, 12, 0.22) 100%), url(' + movie.backdropUrl + ')'"
+>
+  <div class="hero-banner__content">
+    <p class="hero-banner__eyebrow">Featured Today</p>
+
+    <h1>{{ movie.title }}</h1>
+
+    <p class="hero-banner__overview">
+      {{ movie.overview }}
+    </p>
+
+    <div class="hero-banner__meta">
+      <span>{{ movie.releaseYear }}</span>
+      <span>{{ movie.rating }}/10</span>
+      <span>{{ movie.genres[0] }}</span>
+    </div>
+  </div>
 </section>
