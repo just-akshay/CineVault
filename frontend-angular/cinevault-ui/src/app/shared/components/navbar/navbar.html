@@ -1,0 +1,46 @@
+<header class="navbar">
+  <a class="navbar__brand" routerLink="/" (click)="closeMobileMenu()">
+    CineVault
+  </a>
+
+  <nav class="navbar__links" [class.navbar__links--open]="isMobileMenuOpen">
+    <a
+      routerLink="/"
+      routerLinkActive="navbar__link--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="navbar__link"
+      (click)="closeMobileMenu()"
+    >
+      Home
+    </a>
+
+    <a
+      routerLink="/search"
+      routerLinkActive="navbar__link--active"
+      class="navbar__link"
+      (click)="closeMobileMenu()"
+    >
+      Search
+    </a>
+
+    <a
+      routerLink="/vault"
+      routerLinkActive="navbar__link--active"
+      class="navbar__link"
+      (click)="closeMobileMenu()"
+    >
+      My Vault
+    </a>
+  </nav>
+
+  <button
+    class="navbar__menu-button"
+    type="button"
+    aria-label="Toggle navigation menu"
+    (click)="toggleMobileMenu()"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</header>
