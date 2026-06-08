@@ -1,5 +1,5 @@
 .movie-row {
-  padding: 34px 48px 10px;
+  padding: 36px 56px 8px;
   color: #ffffff;
 }
 
@@ -13,20 +13,20 @@
 
 .movie-row__header h2 {
   margin: 0;
-  font-size: 1.55rem;
+  font-size: 1.45rem;
   line-height: 1.2;
 }
 
 .movie-row__header span {
   color: #9b9baa;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .movie-row__scroller {
   display: flex;
   gap: 16px;
   overflow-x: auto;
-  padding-bottom: 18px;
+  padding: 2px 0 18px;
   scroll-snap-type: x proximity;
 }
 
@@ -50,18 +50,17 @@
 
 @media (max-width: 768px) {
   .movie-row {
-    padding: 28px 20px 6px;
+    padding: 30px 20px 4px;
   }
 
   .movie-row__header {
     align-items: start;
     flex-direction: column;
     gap: 6px;
-    margin-bottom: 14px;
   }
 
   .movie-row__header h2 {
-    font-size: 1.25rem;
+    font-size: 1.22rem;
   }
 
   .movie-row__scroller {
