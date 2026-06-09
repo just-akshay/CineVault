@@ -25,7 +25,10 @@
       </p>
 
       <div class="movie-details__actions">
-        <button type="button">Add to Vault</button>
+        <button type="button" [disabled]="isInVault" (click)="addToVault()">
+          {{ isInVault ? 'Added to Vault' : 'Add to Vault' }}
+        </button>
+
         <button type="button" class="movie-details__secondary-button">
           Write Review
         </button>
