@@ -1,6 +1,6 @@
 import { Movie } from '../models/movie.model';
 
-export const DUMMY_MOVIES: Movie[] = [
+export const DUMMY_MOVIES: any[] = [
   {
     id: 1,
     title: 'Interstellar',

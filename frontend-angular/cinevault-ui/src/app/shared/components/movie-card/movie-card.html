@@ -2,19 +2,16 @@
   <div class="movie-card__poster-wrap">
     <img
       class="movie-card__poster"
-      [src]="movie.posterUrl"
+      [src]="imageBaseUrl + movie.poster_path" 
       [alt]="movie.title + ' poster'"
     />
-
-    <span class="movie-card__rating">{{ movie.rating }}</span>
+    <span class="movie-card__rating">{{ getFormattedRating(movie.vote_average) }}</span>
   </div>
 
   <div class="movie-card__content">
     <h3>{{ movie.title }}</h3>
-
     <div class="movie-card__meta">
-      <span>{{ movie.releaseYear }}</span>
-      <span>{{ movie.genres[0] }}</span>
+      <span>{{ getReleaseYear(movie.release_date) }}</span>
     </div>
   </div>
 </a>

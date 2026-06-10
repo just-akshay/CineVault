@@ -1,44 +1,41 @@
 @if (movie) {
-  <section
-    class="movie-details"
-    [style.background-image]="'linear-gradient(90deg, #0a0a0c 0%, rgba(10, 10, 12, 0.88) 48%, rgba(10, 10, 12, 0.42) 100%), url(' + movie.backdropUrl + ')'"
-  >
-    <div class="movie-details__poster">
-      <img [src]="movie.posterUrl" [alt]="movie.title + ' poster'" />
+  <div class="details-container">
+    <div 
+      class="details-hero"
+      [style.backgroundImage]="movie?.backdrop_path ? 'url(' + highResImageBaseUrl + movie.backdrop_path + ')' : 'none'"
+    >
+      <div class="details-hero__overlay"></div>
     </div>
 
-    <div class="movie-details__content">
-      <a class="movie-details__back-link" routerLink="/">Back to home</a>
+    <div class="details-content">
+      <img 
+        class="details-content__poster" 
+        [src]="imageBaseUrl + movie.poster_path" 
+        [alt]="movie.title"
+      >
 
-      <p class="movie-details__eyebrow">Movie Details</p>
+      <div class="details-content__info">
+        <h1>{{ movie.title }}</h1>
+        
+        <div class="meta-data">
+          <span>{{ getReleaseYear(movie.release_date) }}</span>
+          <span class="separator">•</span>
+          <span class="rating">{{ movie.vote_average.toFixed(1) }}/10</span>
+        </div>
 
-      <h1>{{ movie.title }}</h1>
+        <p class="overview">{{ movie.overview }}</p>
 
-      <div class="movie-details__meta">
-        <span>{{ movie.releaseYear }}</span>
-        <span>{{ movie.rating }}/10</span>
-        <span>{{ movie.genres.join(', ') }}</span>
-      </div>
-
-      <p class="movie-details__overview">
-        {{ movie.overview }}
-      </p>
-
-      <div class="movie-details__actions">
-        <button type="button" [disabled]="isInVault" (click)="addToVault()">
-          {{ isInVault ? 'Added to Vault' : 'Add to Vault' }}
-        </button>
-
-        <button type="button" class="movie-details__secondary-button">
-          Write Review
+        <button 
+          class="btn-vault" 
+          [class.saved]="isSaved" 
+          (click)="toggleVault()">
+          {{ isSaved ? 'Remove from Vault' : 'Add to Vault' }}
         </button>
       </div>
     </div>
-  </section>
+  </div>
 } @else {
-  <section class="movie-details movie-details--empty">
-    <h1>Movie not found</h1>
-    <p>The movie you are looking for does not exist in the current dummy data.</p>
-    <a routerLink="/">Go back home</a>
-  </section>
+  <div class="loader-container">
+    <div class="spinner"></div>
+  </div>
 }

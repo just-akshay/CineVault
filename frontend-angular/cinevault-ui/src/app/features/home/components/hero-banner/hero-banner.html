@@ -1,20 +1,35 @@
-<section
-  class="hero-banner"
-  [style.background-image]="'linear-gradient(90deg, #0a0a0c 0%, rgba(10, 10, 12, 0.76) 42%, rgba(10, 10, 12, 0.22) 100%), url(' + movie.backdropUrl + ')'"
->
-  <div class="hero-banner__content">
-    <p class="hero-banner__eyebrow">Featured Today</p>
-
-    <h1>{{ movie.title }}</h1>
-
-    <p class="hero-banner__overview">
-      {{ movie.overview }}
-    </p>
-
-    <div class="hero-banner__meta">
-      <span>{{ movie.releaseYear }}</span>
-      <span>{{ movie.rating }}/10</span>
-      <span>{{ movie.genres[0] }}</span>
+<div class="hero-carousel">
+  @for (movie of movies; track movie.id; let i = $index) {
+    <div 
+      class="hero-slide" 
+      [class.active]="i === currentIndex"
+      [style.backgroundImage]="movie?.backdrop_path ? 'url(' + highResImageBaseUrl + movie.backdrop_path + ')' : 'none'"
+    >
+      <div class="hero-slide__overlay"></div>
+      
+      <div class="hero-slide__content">
+        <h1 class="hero-slide__title">{{ movie.title }}</h1>
+        <p class="hero-slide__overview">{{ movie.overview }}</p>
+        
+        <div class="hero-slide__meta">
+          <span class="meta-item">{{ getReleaseYear(movie.release_date) }}</span>
+          <span class="meta-item separator">•</span>
+          <span class="meta-item rating">{{ movie.vote_average.toFixed(1) }}/10</span>
+        </div>
+      </div>
     </div>
+  }
+
+  <button class="nav-arrow left" (click)="prevSlide(); stopAutoSlide(); startAutoSlide()">&#10094;</button>
+  <button class="nav-arrow right" (click)="nextSlide(); stopAutoSlide(); startAutoSlide()">&#10095;</button>
+
+  <div class="indicators">
+    @for (movie of movies; track movie.id; let i = $index) {
+      <div 
+        class="dot" 
+        [class.active]="i === currentIndex"
+        (click)="goToSlide(i)">
+      </div>
+    }
   </div>
-</section>
+</div>

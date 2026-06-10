@@ -1,22 +1,53 @@
-import { Component } from '@angular/core';
-import { DUMMY_MOVIES } from '../../../../core/constants/dummy-movies';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // 1. Import ChangeDetectorRef
+import { CommonModule } from '@angular/common';
+import { MovieService } from '../../../../core/services/movie.service';
 import { Movie } from '../../../../core/models/movie.model';
-import { Footer } from '../../../../shared/components/footer/footer';
-import { HeroBanner } from '../../components/hero-banner/hero-banner';
+import { HeroBannerComponent } from '../../components/hero-banner/hero-banner';
 import { MovieRow } from '../../components/movie-row/movie-row';
+import { Footer } from '../../../../shared/components/footer/footer'; 
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [HeroBanner, MovieRow, Footer],
+  imports: [CommonModule, HeroBannerComponent, MovieRow, Footer], 
   templateUrl: './home-page.html',
-  styleUrl: './home-page.scss',
+  styleUrls: ['./home-page.scss']
 })
-export class HomePage {
-  featuredMovie: Movie = DUMMY_MOVIES[0];
+export class HomePageComponent implements OnInit {
+  featuredMovie: Movie[] = [];
+  
+  trendingMovies: Movie[] = [];
+  popularMovies: Movie[] = [];
+  topRatedMovies: Movie[] = [];
+  upcomingMovies: Movie[] = [];
 
-  trendingMovies: Movie[] = DUMMY_MOVIES;
-  popularMovies: Movie[] = [...DUMMY_MOVIES].reverse();
-  topRatedMovies: Movie[] = DUMMY_MOVIES.filter((movie) => movie.rating >= 8.5);
-  upcomingMovies: Movie[] = DUMMY_MOVIES.slice(2);
+  constructor(
+    private movieService: MovieService,
+    private cdr: ChangeDetectorRef // 2. Inject it into the constructor
+  ) {}
+
+  ngOnInit(): void {
+    this.movieService.getTrendingMovies().subscribe(movies => {
+  this.trendingMovies = movies;
+  if (movies && movies.length > 0) {
+    this.featuredMovie = movies.slice(0, 5); // Grab the top 5 movies!
+  }
+  this.cdr.detectChanges(); 
+});
+
+    this.movieService.getPopularMovies().subscribe(movies => {
+      this.popularMovies = movies;
+      this.cdr.detectChanges(); // Redraw!
+    });
+
+    this.movieService.getTopRatedMovies().subscribe(movies => {
+      this.topRatedMovies = movies;
+      this.cdr.detectChanges(); // Redraw!
+    });
+
+    this.movieService.getUpcomingMovies().subscribe(movies => {
+      this.upcomingMovies = movies;
+      this.cdr.detectChanges(); // Redraw!
+    });
+  }
 }

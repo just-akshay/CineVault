@@ -31,6 +31,15 @@ export class VaultService {
     localStorage.setItem(VAULT_STORAGE_KEY, JSON.stringify(updatedVault));
   }
 
+// Checks if a movie ID already exists in the vault array
+    isInVault(movieId: number | string): boolean {
+    // 1. We call getVaultMovies() instead of looking for a variable
+      const currentVault = this.getVaultMovies();
+    
+    // 2. Now TypeScript knows exactly what 'movie' is!
+      return currentVault.some(movie => movie.id === movieId);
+  }
+
   removeFromVault(movieId: number): void {
     const currentVault = this.getVaultMovies();
     const updatedVault = currentVault.filter((movie) => movie.id !== movieId);

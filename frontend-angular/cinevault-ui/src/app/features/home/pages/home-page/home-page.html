@@ -1,10 +1,16 @@
-<section class="home-page">
-  <app-hero-banner [movie]="featuredMovie" />
+@if (featuredMovie.length > 0) {
+  <app-hero-banner [movies]="featuredMovie"></app-hero-banner>
 
-  <app-movie-row title="Trending Now" [movies]="trendingMovies" />
-  <app-movie-row title="Popular Movies" [movies]="popularMovies" />
-  <app-movie-row title="Top Rated Movies" [movies]="topRatedMovies" />
-  <app-movie-row title="Upcoming Movies" [movies]="upcomingMovies" />
+  <div class="home-container">
+    <app-movie-row title="Trending Now" [movies]="trendingMovies"></app-movie-row>
+    <app-movie-row title="Popular Movies" [movies]="popularMovies"></app-movie-row>
+    <app-movie-row title="Top Rated Movies" [movies]="topRatedMovies"></app-movie-row>
+    <app-movie-row title="Upcoming Movies" [movies]="upcomingMovies"></app-movie-row>
+  </div>
 
-  <app-footer />
-</section>
+  <app-footer></app-footer>
+} @else {
+  <div class="loader-container">
+    <div class="spinner"></div>
+  </div>
+}
