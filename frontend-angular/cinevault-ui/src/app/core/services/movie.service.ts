@@ -57,8 +57,8 @@ export class MovieService {
   // --- NEW: For the Movie Details Page ---
   // Change getMovieDetails to this more flexible getDetails method:
   getDetails(type: string, id: number | string): Observable<any> {
-    // We added &append_to_response=videos to the end of the URL!
-    return this.http.get<any>(`${this.apiUrl}/${type}/${id}?api_key=${this.apiKey}&append_to_response=videos`);
+    // We appended ,watch/providers to the end of our optimization chain!
+    return this.http.get<any>(`${this.apiUrl}/${type}/${id}?api_key=${this.apiKey}&append_to_response=videos,credits,watch/providers`);
   }
 
 // Searches TMDB for Movies AND TV Shows
@@ -95,5 +95,17 @@ export class MovieService {
         );
     }
     return this.popularTvCache$;
+  }
+  // Advanced discovery engine
+  getFilteredMovies(minRating: number, minYear: number): Observable<Movie[]> {
+    const url = `${this.apiUrl}/discover/movie?api_key=${this.apiKey}` +
+                `&vote_average.gte=${minRating}` +
+                `&primary_release_date.gte=${minYear}-01-01` +
+                `&vote_count.gte=200` + // Ensures crowd consensus
+                `&sort_by=popularity.desc`; // Puts the best known titles first
+
+    return this.http.get<TmdbResponse>(url).pipe(
+      map(response => response.results.map(movie => ({ ...movie, media_type: 'movie' })))
+    );
   }
 }

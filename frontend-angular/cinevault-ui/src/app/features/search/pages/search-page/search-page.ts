@@ -6,11 +6,11 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MovieService } from '../../../../core/services/movie.service';
 import { Movie } from '../../../../core/models/movie.model';
 import { MovieCardComponent } from '../../../../shared/components/movie-card/movie-card'; 
-
+import { SkeletonCardComponent } from '../../../../shared/components/skeleton-card/skeleton-card';
 @Component({
   selector: 'app-search-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MovieCardComponent], 
+  imports: [CommonModule, ReactiveFormsModule, MovieCardComponent, SkeletonCardComponent], 
   templateUrl: './search-page.html',
   styleUrls: ['./search-page.scss']
 })

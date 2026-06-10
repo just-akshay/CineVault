@@ -3,11 +3,12 @@ import { HomePageComponent } from './features/home/pages/home-page/home-page';
 
 // 1. Import your details component
 import { MovieDetailsPageComponent } from './features/movie-details/pages/movie-details-page/movie-details-page';
+import { FilterPageComponent } from './features/filter/pages/filter-page/filter-page';
 export const routes: Routes = [
 
     // 2. Add the dynamic route for the movie details
 { path: 'details/:type/:id', component: MovieDetailsPageComponent },
-
+{ path: 'discover', component: FilterPageComponent },
   {
     path: '',
     loadComponent: () =>

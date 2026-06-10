@@ -15,10 +15,11 @@ import { TMDB_CONFIG } from '../../../../core/constants/tmdb.constants';
 export class MovieDetailsPageComponent implements OnInit {
   movie: any = null; 
   isSaved: boolean = false;
-  
+  cast: any[] = [];
   trailerUrl: SafeResourceUrl | null = null;
   showTrailer: boolean = false;
-  
+  streamProviders: any[] = [];
+  rentProviders: any[] = [];
   imageBaseUrl = TMDB_CONFIG.IMAGE_BASE_URL;
   highResImageBaseUrl = 'https://image.tmdb.org/t/p/original';
 
@@ -30,21 +31,38 @@ export class MovieDetailsPageComponent implements OnInit {
     private sanitizer: DomSanitizer 
   ) {}
 
-  ngOnInit(): void {
+ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     const type = this.route.snapshot.paramMap.get('type') || 'movie';
+    
     
     if (id) {
       this.movieService.getDetails(type, id).subscribe({
         next: (data) => {
           this.movie = data;
           
-          // Normalize TV shows to have a 'title'
           if (!this.movie?.title && this.movie?.name) {
             this.movie.title = this.movie.name; 
           }
 
-          // Find and sanitize the YouTube Trailer
+          this.cast = data.credits?.cast?.slice(0, 12) || [];
+
+          // --- 2. EXTRACT WATCH PROVIDERS ---
+          // Accessing via bracket notation because of the forward slash in the key name
+          const watchData = data['watch/providers']?.results || {};
+          
+          // Target your regional node ('IN' for India) or fall back to 'US' if missing
+          const regionData = watchData['IN'] || watchData['US'] || null;
+
+          if (regionData) {
+            this.streamProviders = regionData.flatrate || []; // Subscription platforms
+            this.rentProviders = regionData.rent || [];         // On-demand transactional platforms
+          } else {
+            this.streamProviders = [];
+            this.rentProviders = [];
+          }
+
+          // 3. Keep your existing trailer resolution setup
           const videos = data.videos?.results || [];
           const trailer = videos.find((v: any) => v.site === 'YouTube' && v.type === 'Trailer');
 
@@ -59,6 +77,7 @@ export class MovieDetailsPageComponent implements OnInit {
         error: (err) => console.error(err)
       });
     }
+    
   }
 
   // --- VAULT METHODS (Restored!) ---

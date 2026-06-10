@@ -1,0 +1,57 @@
+/* --- The Shimmer Animation Loop --- */
+@keyframes shimmerAnimation {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* --- Base Skeleton Properties --- */
+.skeleton-element {
+  /* This gradient creates the light-gray metallic wave blend */
+  background: linear-gradient(
+    90deg, 
+    #1c1c24 25%, 
+    #2c2c38 50%, 
+    #1c1c24 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmerAnimation 1.5s infinite linear;
+}
+
+/* --- Card Alignment (Matches your 180px standard card style!) --- */
+.skeleton-movie-card {
+  display: flex;
+  flex-direction: column;
+  width: 180px; 
+  opacity: 0.8;
+}
+
+.skeleton-poster {
+  width: 100%;
+  /* Using padding-bottom instead of height handles aspect ratios beautifully */
+  padding-bottom: 150%; /* Replicates the exact height of your poster image wrappers */
+  border-radius: 8px; /* Your exact rounded corner setting! */
+  margin-bottom: 10px;
+}
+
+.skeleton-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.skeleton-title {
+  height: 14px;
+  width: 85%;
+  border-radius: 4px;
+}
+
+.skeleton-year {
+  height: 11px;
+  width: 40%;
+  border-radius: 4px;
+}

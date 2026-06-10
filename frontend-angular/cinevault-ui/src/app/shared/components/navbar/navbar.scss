@@ -1,101 +1,63 @@
-.navbar {
-  position: sticky;
+/* ==========================================================================
+   CINEMATIC TOP NAVIGATION BAR
+   ========================================================================== */
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;     
+  padding: 20px 5%;
+  background-color: #0d0d12;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: fixed;         
   top: 0;
-  z-index: 100;
-  height: 72px;
-  padding: 0 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(10, 10, 12, 0.96);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  left: 0;
+  width: 100%;
+  z-index: 100;            
+  box-sizing: border-box;  
 }
 
-.navbar__brand {
-  color: #ffffff;
-  font-size: 1.5rem;
-  font-weight: 900;
+/* --- Brand Identity (Now Crisp White) --- */
+.navbar-logo a {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #ffffff;          /* Changed from red to clean white */
   text-decoration: none;
+  letter-spacing: -0.5px;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;          /* Subtle fade effect on hover */
+  }
 }
 
-.navbar__links {
+/* --- Rigid Link Container --- */
+.navbar-links {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 12px;               
 }
 
-.navbar__link {
-  color: #b8b8c2;
+/* --- Standard Nav Hitboxes --- */
+.nav-item {
+  text-decoration: none !important; 
   font-size: 0.95rem;
+  font-weight: 500;
+  color: #aaaaaa;          
+  padding: 8px 16px;       
+  border-radius: 4px;
+  margin: 0;               
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* --- Active Tracking Mechanism (Stays Cinematic Red) --- */
+.active-link {
+  color: #e50914 !important; 
+  background-color: rgba(229, 9, 20, 0.05) !important; 
   font-weight: 700;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.navbar__link:hover,
-.navbar__link--active {
-  color: #ffffff;
-}
-
-.navbar__menu-button {
-  display: none;
-  width: 42px;
-  height: 42px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.navbar__menu-button span {
-  display: block;
-  width: 18px;
-  height: 2px;
-  margin: 4px auto;
-  background: #ffffff;
-  border-radius: 999px;
-}
-
-@media (max-width: 768px) {
-  .navbar {
-    height: 64px;
-    padding: 0 20px;
-  }
-
-  .navbar__brand {
-    font-size: 1.25rem;
-  }
-
-  .navbar__menu-button {
-    display: block;
-  }
-
-  .navbar__links {
-    position: absolute;
-    top: 64px;
-    right: 16px;
-    left: 16px;
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 6px;
-    padding: 12px;
-    background: #121218;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-  }
-
-  .navbar__links--open {
-    display: flex;
-  }
-
-  .navbar__link {
-    padding: 12px;
-    border-radius: 6px;
-  }
-
-  .navbar__link:hover,
-  .navbar__link--active {
-    background: rgba(255, 255, 255, 0.07);
-  }
 }

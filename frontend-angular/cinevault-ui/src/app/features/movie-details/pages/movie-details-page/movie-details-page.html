@@ -18,44 +18,100 @@
         <h1>{{ movie.title }}</h1>
         
         <div class="meta-data">
-          <span>{{ getReleaseYear(movie.release_date) }}</span>
+          <span>{{ getReleaseYear(movie.release_date || movie.first_air_date) }}</span>
           <span class="separator">•</span>
-          <span class="rating">{{ movie.vote_average.toFixed(1) }}/10</span>
+          <span class="rating">{{ movie.vote_average?.toFixed(1) }}/10</span>
         </div>
 
         <p class="overview">{{ movie.overview }}</p>
 
         <div class="button-group">
-  @if (trailerUrl) {
-    <button class="btn-play" (click)="openTrailer()">
-      ▶ Watch Trailer
-    </button>
-  }
+          @if (trailerUrl) {
+            <button class="btn-play" (click)="openTrailer()">
+              ▶ Watch Trailer
+            </button>
+          }
 
-  <button class="btn-vault" [class.saved]="isSaved" (click)="toggleVault()">
-    {{ isSaved ? 'Remove from Vault' : 'Add to Vault' }}
-  </button>
-</div>
+          @if (streamProviders.length > 0 || rentProviders.length > 0) {
+          <div class="providers-wrapper">
+            
+            @if (streamProviders.length > 0) {
+              <div class="provider-row">
+                <span class="provider-row__label">Stream:</span>
+                <div class="provider-row__badges">
+                  @for (provider of streamProviders; track provider.provider_id) {
+                    <div class="badge-item" [title]="provider.provider_name">
+                      <img [src]="imageBaseUrl + provider.logo_path" [alt]="provider.provider_name">
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (rentProviders.length > 0) {
+              <div class="provider-row">
+                <span class="provider-row__label">Rent/Buy:</span>
+                <div class="provider-row__badges">
+                  @for (provider of rentProviders; track provider.provider_id) {
+                    <div class="badge-item" [title]="provider.provider_name">
+                      <img [src]="imageBaseUrl + provider.logo_path" [alt]="provider.provider_name">
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+          </div>
+        }
+
+          <button 
+            class="btn-vault" 
+            [class.saved]="isSaved" 
+            (click)="toggleVault()">
+            {{ isSaved ? 'Remove from Vault' : 'Add to Vault' }}
+          </button>
+        </div>
       </div>
     </div>
+
+    @if (cast.length > 0) {
+      <div class="cast-section">
+        <h2>Cast & Crew</h2>
+        <div class="cast-slider">
+          @for (actor of cast; track actor.id) {
+            <div class="cast-card">
+              <div class="cast-card__avatar-wrap">
+                <img 
+                  [src]="actor.profile_path ? imageBaseUrl + actor.profile_path : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'" 
+                  [alt]="actor.name"
+                  class="cast-card__avatar"
+                >
+              </div>
+              <p class="cast-card__name" [title]="actor.name">{{ actor.name }}</p>
+              <p class="cast-card__character" [title]="actor.character">{{ actor.character }}</p>
+            </div>
+          }
+        </div>
+      </div>
+    }
   </div>
 
   @if (showTrailer) {
-  <div class="trailer-modal-backdrop" (click)="closeTrailer()">
-    <div class="trailer-modal-content" (click)="$event.stopPropagation()">
-      <button class="close-btn" (click)="closeTrailer()">✕</button>
-      
-      <div class="iframe-wrapper">
-        <iframe 
-          [src]="trailerUrl" 
-          frameborder="0" 
-          allow="autoplay; encrypted-media; fullscreen" 
-          allowfullscreen>
-        </iframe>
+    <div class="trailer-modal-backdrop" (click)="closeTrailer()">
+      <div class="trailer-modal-content" (click)="$event.stopPropagation()">
+        <button class="close-btn" (click)="closeTrailer()">✕</button>
+        
+        <div class="iframe-wrapper">
+          <iframe 
+            [src]="trailerUrl" 
+            frameborder="0" 
+            allow="autoplay; encrypted-media; fullscreen" 
+            allowfullscreen>
+          </iframe>
+        </div>
       </div>
     </div>
-  </div>
-}
+  }
 } @else {
   <div class="loader-container">
     <div class="spinner"></div>

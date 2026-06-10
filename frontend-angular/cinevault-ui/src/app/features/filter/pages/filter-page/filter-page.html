@@ -1,0 +1,49 @@
+<div class="filter-page-container">
+  <div class="filter-header">
+    <h1>Masterpiece Finder</h1>
+    <p>Skip the scrolling. Dial in exactly what you want to watch.</p>
+
+    <div class="filter-control-panel">
+      <div class="control-group">
+        <label for="ratingSelect">Minimum IMDb Rating</label>
+        <select id="ratingSelect" (change)="onRatingChange($event)">
+          @for (rating of ratingOptions; track rating) {
+            <option [value]="rating" [selected]="rating === selectedRating">⭐ {{ rating }}+</option>
+          }
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="yearSelect">Released From Year</label>
+        <select id="yearSelect" (change)="onYearChange($event)">
+          @for (year of yearOptions; track year) {
+            <option [value]="year" [selected]="year === selectedYear">📅 {{ year }} - Present</option>
+          }
+        </select>
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading) {
+    <div class="movies-grid">
+      @for (placeholder of [1,2,3,4,5,6,7,8]; track placeholder) {
+        <app-skeleton-card></app-skeleton-card>
+      }
+    </div>
+  }
+
+  @if (!isLoading && filteredMovies.length > 0) {
+    <div class="movies-grid">
+      @for (movie of filteredMovies; track movie.id) {
+        <app-movie-card [movie]="movie"></app-movie-card>
+      }
+    </div>
+  }
+
+  @if (!isLoading && filteredMovies.length === 0) {
+    <div class="empty-state">
+      <h2>No matches found</h2>
+      <p>Try lowering your constraints slightly. Even Hollywood has limits!</p>
+    </div>
+  }
+</div>
