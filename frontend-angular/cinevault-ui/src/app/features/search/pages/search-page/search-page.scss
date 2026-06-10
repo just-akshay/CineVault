@@ -106,3 +106,52 @@
     width: 100%;
   }
 }
+.search-container {
+  min-height: 100vh;
+  background-color: #0d0d12;
+  color: white;
+  padding: 100px 5% 50px; // Gives space below the navbar
+}
+
+.search-header {
+  max-width: 800px;
+  margin: 0 auto 50px auto; // Centers the header
+  text-align: center;
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 20px 25px;
+    font-size: 1.2rem;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px; // Pill shape
+    outline: none;
+    transition: all 0.3s ease;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:focus {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: #e50914; // Netflix red border on focus
+      box-shadow: 0 0 15px rgba(229, 9, 20, 0.3);
+    }
+  }
+}
+
+/* --- Results Grid --- */
+.movies-grid {
+  display: grid;
+  /* This creates a perfectly responsive grid. Cards will never be smaller than 200px, 
+     and will automatically fill the screen side-by-side. */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 40px 20px; /* 40px vertical space, 20px horizontal space */
+  padding-top: 20px;
+}

@@ -1,28 +1,50 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { DUMMY_MOVIES } from '../../../../core/constants/dummy-movies';
+// 1. Import ChangeDetectorRef
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormControl } from '@angular/forms'; 
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { MovieService } from '../../../../core/services/movie.service';
 import { Movie } from '../../../../core/models/movie.model';
-import { MovieCardComponent } from '../../../../shared/components/movie-card/movie-card';
+import { MovieCardComponent } from '../../../../shared/components/movie-card/movie-card'; 
 
 @Component({
   selector: 'app-search-page',
   standalone: true,
-  imports: [FormsModule, MovieCardComponent],
+  imports: [CommonModule, ReactiveFormsModule, MovieCardComponent], 
   templateUrl: './search-page.html',
-  styleUrl: './search-page.scss',
+  styleUrls: ['./search-page.scss']
 })
-export class SearchPage {
-  searchTerm = '';
+export class SearchPageComponent implements OnInit {
+  searchControl = new FormControl(''); 
+  searchResults: Movie[] = [];
+  isSearching: boolean = false;
 
-  get filteredMovies(): Movie[] {
-    const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
+  constructor(
+    private movieService: MovieService,
+    private cdr: ChangeDetectorRef // 2. Inject it here!
+  ) {}
 
-    if (!normalizedSearchTerm) {
-      return DUMMY_MOVIES;
-    }
-
-    return DUMMY_MOVIES.filter((movie) =>
-      movie.title.toLowerCase().includes(normalizedSearchTerm)
-    );
+  ngOnInit(): void {
+    this.searchControl.valueChanges.pipe(
+      debounceTime(400), 
+      distinctUntilChanged(), 
+      switchMap(query => {
+        this.isSearching = true; 
+        this.cdr.detectChanges(); // WAKE UP: Draw the loading spinner!
+        
+        return this.movieService.searchMovies(query || ''); 
+      })
+    ).subscribe({
+      next: (movies) => {
+        this.searchResults = movies;
+        this.isSearching = false; 
+        this.cdr.detectChanges(); // WAKE UP: Draw the movie posters!
+      },
+      error: (err) => {
+        console.error("Search failed:", err);
+        this.isSearching = false;
+        this.cdr.detectChanges(); 
+      }
+    });
   }
 }

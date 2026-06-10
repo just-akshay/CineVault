@@ -20,7 +20,8 @@ export class HomePageComponent implements OnInit {
   popularMovies: Movie[] = [];
   topRatedMovies: Movie[] = [];
   upcomingMovies: Movie[] = [];
-
+  trendingTvShows: Movie[] = [];
+  popularTvShows: Movie[] = []; 
   constructor(
     private movieService: MovieService,
     private cdr: ChangeDetectorRef // 2. Inject it into the constructor
@@ -49,5 +50,14 @@ export class HomePageComponent implements OnInit {
       this.upcomingMovies = movies;
       this.cdr.detectChanges(); // Redraw!
     });
+    this.movieService.getTrendingTvShows().subscribe(shows => {
+  this.trendingTvShows = shows;
+  this.cdr.detectChanges();
+});
+
+this.movieService.getPopularTvShows().subscribe(shows => {
+  this.popularTvShows = shows;
+  this.cdr.detectChanges();
+});
   }
 }

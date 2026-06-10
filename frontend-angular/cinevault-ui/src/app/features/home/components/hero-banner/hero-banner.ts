@@ -54,7 +54,8 @@ export class HeroBannerComponent implements OnInit, OnDestroy {
     this.startAutoSlide(); 
   }
 
-  getReleaseYear(dateString: string): string {
+  // Add "| undefined" to the parameter type
+  getReleaseYear(dateString: string | undefined): string {
     return dateString ? dateString.split('-')[0] : '';
   }
 }

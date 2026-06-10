@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // 1. Import CDR
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MovieService } from '../../../../core/services/movie.service';
 import { VaultService } from '../../../../core/services/vault-service';
-import { Movie } from '../../../../core/models/movie.model';
 import { TMDB_CONFIG } from '../../../../core/constants/tmdb.constants';
 
 @Component({
@@ -13,8 +13,11 @@ import { TMDB_CONFIG } from '../../../../core/constants/tmdb.constants';
   styleUrls: ['./movie-details-page.scss']
 })
 export class MovieDetailsPageComponent implements OnInit {
-  movie: Movie | null = null; 
+  movie: any = null; 
   isSaved: boolean = false;
+  
+  trailerUrl: SafeResourceUrl | null = null;
+  showTrailer: boolean = false;
   
   imageBaseUrl = TMDB_CONFIG.IMAGE_BASE_URL;
   highResImageBaseUrl = 'https://image.tmdb.org/t/p/original';
@@ -23,27 +26,42 @@ export class MovieDetailsPageComponent implements OnInit {
     private route: ActivatedRoute,
     private movieService: MovieService,
     private vaultService: VaultService,
-    private cdr: ChangeDetectorRef // 2. Inject it here
+    private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer 
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
+    const type = this.route.snapshot.paramMap.get('type') || 'movie';
     
     if (id) {
-      // 3. Updated subscription to handle success, trigger redraw, and catch errors
-      this.movieService.getMovieDetails(id).subscribe({
+      this.movieService.getDetails(type, id).subscribe({
         next: (data) => {
           this.movie = data;
+          
+          // Normalize TV shows to have a 'title'
+          if (!this.movie?.title && this.movie?.name) {
+            this.movie.title = this.movie.name; 
+          }
+
+          // Find and sanitize the YouTube Trailer
+          const videos = data.videos?.results || [];
+          const trailer = videos.find((v: any) => v.site === 'YouTube' && v.type === 'Trailer');
+
+          if (trailer) {
+            const url = `https://www.youtube.com/embed/${trailer.key}?autoplay=1`;
+            this.trailerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+          }
+
           this.checkIfSaved();
-          this.cdr.detectChanges(); // 4. WAKE UP AND REDRAW!
+          this.cdr.detectChanges(); 
         },
-        error: (err) => {
-          console.error("Failed to fetch movie details from TMDB:", err);
-        }
+        error: (err) => console.error(err)
       });
     }
   }
 
+  // --- VAULT METHODS (Restored!) ---
   checkIfSaved(): void {
     if (this.movie) {
       this.isSaved = this.vaultService.isInVault(this.movie.id);
@@ -61,7 +79,17 @@ export class MovieDetailsPageComponent implements OnInit {
     }
   }
 
+  // --- HELPER METHODS (Restored!) ---
   getReleaseYear(dateString: string | undefined): string {
     return dateString ? dateString.split('-')[0] : 'TBA';
+  }
+
+  // --- TRAILER MODAL METHODS ---
+  openTrailer(): void {
+    this.showTrailer = true;
+  }
+
+  closeTrailer(): void {
+    this.showTrailer = false;
   }
 }

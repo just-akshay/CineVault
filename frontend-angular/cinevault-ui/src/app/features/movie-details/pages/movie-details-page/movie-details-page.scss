@@ -141,3 +141,84 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+/* --- Button Layout --- */
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn-play {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #000;
+  background-color: #fff; // Netflix style play button
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #e6e6e6;
+    transform: translateY(-2px);
+  }
+}
+
+/* --- Trailer Modal --- */
+.trailer-modal-backdrop {
+  position: fixed;
+  inset: 0; // covers entire screen
+  background-color: rgba(0, 0, 0, 0.9); // Dark cinematic dimming
+  z-index: 1000; // Sits on top of EVERYTHING
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.trailer-modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 1000px; // Cap the width on massive screens
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: rgba(229, 9, 20, 0.8); // Netflix red on hover
+  }
+}
+
+/* This forces a perfect 16:9 Aspect Ratio for the YouTube Player! */
+.iframe-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 ratio */
+  height: 0;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}

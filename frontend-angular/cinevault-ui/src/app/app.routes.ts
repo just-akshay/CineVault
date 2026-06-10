@@ -4,6 +4,10 @@ import { HomePageComponent } from './features/home/pages/home-page/home-page';
 // 1. Import your details component
 import { MovieDetailsPageComponent } from './features/movie-details/pages/movie-details-page/movie-details-page';
 export const routes: Routes = [
+
+    // 2. Add the dynamic route for the movie details
+{ path: 'details/:type/:id', component: MovieDetailsPageComponent },
+
   {
     path: '',
     loadComponent: () =>
@@ -15,14 +19,14 @@ export const routes: Routes = [
     path: 'search',
     loadComponent: () =>
       import('./features/search/pages/search-page/search-page').then(
-        (m) => m.SearchPage
+        (m) => m.SearchPageComponent
       ),
   },
   {
     path: 'vault',
     loadComponent: () =>
       import('./features/vault/pages/vault-page/vault-page').then(
-        (m) => m.VaultPage
+        (m) => m.VaultPageComponent
       ),
   },
   {
@@ -38,6 +42,5 @@ export const routes: Routes = [
   },
   { path: '', component: HomePageComponent },
   
-  // 2. Add the dynamic route for the movie details
-  { path: 'movie/:id', component: MovieDetailsPageComponent },
+
 ];

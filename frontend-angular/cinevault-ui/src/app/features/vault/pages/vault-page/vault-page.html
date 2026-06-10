@@ -1,36 +1,21 @@
 <div class="vault-container">
-  @if (vaultMovies.length > 0) {
-    <div class="vault__header">
-      <div>
-        <h1>My Vault</h1>
-        <p>{{ vaultMovies.length }} movies saved</p>
-      </div>
-    </div>
+  <div class="vault-header">
+    <h1>My Vault</h1>
+    <p>Your personal collection of cinematic masterpieces.</p>
+  </div>
 
-    <div class="vault__grid">
-      @for (movie of vaultMovies; track movie.id) {
-        <div class="vault-card">
-          <app-movie-card [movie]="movie"></app-movie-card>
-
-          <button
-            class="vault-card__remove"
-            (click)="removeMovie(movie.id)">
-            Remove
-          </button>
-        </div>
+  @if (savedMovies.length > 0) {
+    <div class="movies-grid">
+      @for (movie of savedMovies; track movie.id) {
+        <app-movie-card [movie]="movie"></app-movie-card>
       }
     </div>
   } @else {
-    <div class="vault__empty-state">
-      <div class="empty-icon">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm0 2v12h16V6H4zm14 2l-4 4h-2l4-4h2zm-5 0l-4 4H7l4-4h2z" />
-        </svg>
-      </div>
+    <div class="empty-state">
+      <div class="empty-icon">🎬</div>
       <h2>Your Vault is Empty</h2>
-      <p>Looks like you haven't saved any movies yet. Let's find something epic to watch!</p>
-      
-      <a routerLink="/" class="btn-primary">Explore Movies</a>
+      <p>You haven't saved any movies or TV shows yet.</p>
+      <a routerLink="/search" class="btn-explore">Explore Titles</a>
     </div>
   }
 </div>

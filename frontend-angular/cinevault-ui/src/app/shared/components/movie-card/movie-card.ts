@@ -23,4 +23,16 @@ export class MovieCardComponent {
   getFormattedRating(rating: number): string {
     return rating ? rating.toFixed(1) : 'NR';
   }
+  getYear(): string {
+    const dateString = this.movie.release_date || this.movie.first_air_date;
+    return dateString ? dateString.split('-')[0] : 'TBA';
+  }
+  // This builds a perfectly safe array for Angular's router
+  getRouteUrl(): any[] {
+    // If the database gave us a media_type (like 'tv'), use it. 
+    // If it's missing, safely assume it's a 'movie'.
+    const type = this.movie.media_type ? this.movie.media_type : 'movie';
+    
+    return ['/details', type, this.movie.id];
+  }
 }

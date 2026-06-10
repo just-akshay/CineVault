@@ -1,33 +1,32 @@
-<section class="search-page">
-  <div class="search-page__header">
-    <p class="search-page__eyebrow">Discover</p>
-    <h1>Search Movies</h1>
-    <p>Find movies from the current CineVault dummy library.</p>
+<div class="search-container">
+  <div class="search-header">
+    <h1>Search Movies & TV Shows</h1>
+    <input 
+      type="text" 
+      class="search-input" 
+      [formControl]="searchControl" 
+      placeholder="Type a title... (e.g. Breaking Bad, Inception)"
+      autocomplete="off" 
+      spellcheck="false"
+      autofocus
+    >
   </div>
 
-  <label class="search-page__field">
-    <span>Movie title</span>
-    <input
-      type="text"
-      placeholder="Search Interstellar, Dune, Batman..."
-      [(ngModel)]="searchTerm"
-    />
-  </label>
+  @if (isSearching) {
+    <div class="loader-container"><div class="spinner"></div></div>
+  }
 
-  <div class="search-page__summary">
-    {{ filteredMovies.length }} result(s)
-  </div>
-
-  @if (filteredMovies.length > 0) {
-    <div class="search-page__grid">
-      @for (movie of filteredMovies; track movie.id) {
-        <app-movie-card [movie]="movie" />
+  @if (!isSearching && searchResults.length > 0) {
+    <div class="movies-grid">
+      @for (movie of searchResults; track movie.id) {
+        <app-movie-card [movie]="movie"></app-movie-card>
       }
     </div>
-  } @else {
-    <div class="search-page__empty">
-      <h2>No movies found</h2>
-      <p>Try searching with a different movie title.</p>
+  }
+
+  @if (!isSearching && searchControl.value && searchResults.length === 0) {
+    <div class="empty-state">
+      <h2>No titles found for "{{ searchControl.value }}"</h2>
     </div>
   }
-</section>
+</div>

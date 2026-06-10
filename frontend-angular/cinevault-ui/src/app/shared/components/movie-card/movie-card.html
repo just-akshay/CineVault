@@ -1,17 +1,16 @@
-<a class="movie-card" [routerLink]="['/movie', movie.id]">
+<a class="movie-card" [routerLink]="getRouteUrl()">
+  
   <div class="movie-card__poster-wrap">
     <img
       class="movie-card__poster"
       [src]="imageBaseUrl + movie.poster_path" 
-      [alt]="movie.title + ' poster'"
+      [alt]="(movie.title || movie.name) + ' poster'"
     />
-    <span class="movie-card__rating">{{ getFormattedRating(movie.vote_average) }}</span>
+    <span class="movie-card__rating">{{ movie.vote_average?.toFixed(1) }}</span>
   </div>
 
   <div class="movie-card__content">
-    <h3>{{ movie.title }}</h3>
-    <div class="movie-card__meta">
-      <span>{{ getReleaseYear(movie.release_date) }}</span>
-    </div>
+    <h3 class="card-title">{{ movie.title || movie.name }}</h3>
+    <span class="card-year">{{ getYear() }}</span>  
   </div>
 </a>

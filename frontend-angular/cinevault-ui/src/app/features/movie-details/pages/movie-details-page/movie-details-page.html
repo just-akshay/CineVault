@@ -25,15 +25,37 @@
 
         <p class="overview">{{ movie.overview }}</p>
 
-        <button 
-          class="btn-vault" 
-          [class.saved]="isSaved" 
-          (click)="toggleVault()">
-          {{ isSaved ? 'Remove from Vault' : 'Add to Vault' }}
-        </button>
+        <div class="button-group">
+  @if (trailerUrl) {
+    <button class="btn-play" (click)="openTrailer()">
+      ▶ Watch Trailer
+    </button>
+  }
+
+  <button class="btn-vault" [class.saved]="isSaved" (click)="toggleVault()">
+    {{ isSaved ? 'Remove from Vault' : 'Add to Vault' }}
+  </button>
+</div>
       </div>
     </div>
   </div>
+
+  @if (showTrailer) {
+  <div class="trailer-modal-backdrop" (click)="closeTrailer()">
+    <div class="trailer-modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeTrailer()">✕</button>
+      
+      <div class="iframe-wrapper">
+        <iframe 
+          [src]="trailerUrl" 
+          frameborder="0" 
+          allow="autoplay; encrypted-media; fullscreen" 
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+}
 } @else {
   <div class="loader-container">
     <div class="spinner"></div>
