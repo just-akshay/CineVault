@@ -1,0 +1,29 @@
+<a [routerLink]="['/details', movie.media_type || 'movie', movie.id]" class="media-card">
+  
+  <div class="poster-wrapper">
+    <img 
+      [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path : 'assets/no-poster.png'" 
+      [alt]="movie.title"
+    >
+    
+    <div class="card-overlays">
+      
+      @if (movie.vote_average && movie.vote_average > 0) {
+        <div class="card-rating">
+          {{ movie.vote_average | number:'1.1-1' }}
+        </div>
+      }
+      
+      <button class="remove-badge" (click)="onRemoveClick($event)" title="Remove item from vault">
+        ✕
+      </button>
+
+    </div>
+  </div>
+
+  <div class="card-info">
+    <h3>{{ movie.title }}</h3>
+    <span>{{ (movie.release_date | date:'yyyy') || 'N/A' }}</span>
+  </div>
+
+</a>

@@ -1,38 +1,54 @@
 @if (movie) {
   <div class="details-container">
-    <div 
-      class="details-hero"
-      [style.backgroundImage]="movie?.backdrop_path ? 'url(' + highResImageBaseUrl + movie.backdrop_path + ')' : 'none'"
-    >
-      <div class="details-hero__overlay"></div>
-    </div>
+    
+    @if (movie.backdrop_path) {
+      <div class="details-hero" [style.background-image]="'url(https://image.tmdb.org/t/p/original' + movie.backdrop_path + ')'">
+        <div class="details-hero__overlay"></div>
+      </div>
+    }
 
     <div class="details-content">
+      
       <img 
         class="details-content__poster" 
-        [src]="imageBaseUrl + movie.poster_path" 
+        [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path : 'assets/no-poster.png'" 
         [alt]="movie.title"
       >
 
       <div class="details-content__info">
         <h1>{{ movie.title }}</h1>
-        
+
         <div class="meta-data">
-          <span>{{ getReleaseYear(movie.release_date || movie.first_air_date) }}</span>
-          <span class="separator">•</span>
-          <span class="rating">{{ movie.vote_average?.toFixed(1) }}/10</span>
+          @if (movie.release_date || movie.first_air_date) {
+            <span>{{ (movie.release_date || movie.first_air_date) | date:'yyyy' }}</span>
+            <span class="separator">•</span>
+          }
+          
+          @if (movie.runtime || movie.episode_run_time?.[0]) {
+            <span>{{ movie.runtime || movie.episode_run_time?.[0] }} mins</span>
+            <span class="separator">•</span>
+          }
+
+          @if (movie.vote_average) {
+            <span class="rating">⭐ {{ movie.vote_average | number:'1.1-1' }}</span>
+          }
         </div>
 
-        <p class="overview">{{ movie.overview }}</p>
+        <p class="overview">{{ movie.overview || 'No overview synopsis provided for this media file.' }}</p>
 
         <div class="button-group">
           @if (trailerUrl) {
-            <button class="btn-play" (click)="openTrailer()">
-              ▶ Watch Trailer
+            <button class="btn-play" (click)="showTrailer = true">
+              <span>▶</span> Play Trailer
             </button>
           }
+          
+          <button class="btn-vault" [class.saved]="isSaved" (click)="toggleVault()">
+            {{ isSaved ? '🔒 Locked in Vault' : '📁 Add to Vault' }}
+          </button>
+        </div>
 
-          @if (streamProviders.length > 0 || rentProviders.length > 0) {
+        @if (streamProviders.length > 0 || rentProviders.length > 0) {
           <div class="providers-wrapper">
             
             @if (streamProviders.length > 0) {
@@ -41,7 +57,7 @@
                 <div class="provider-row__badges">
                   @for (provider of streamProviders; track provider.provider_id) {
                     <div class="badge-item" [title]="provider.provider_name">
-                      <img [src]="imageBaseUrl + provider.logo_path" [alt]="provider.provider_name">
+                      <img [src]="'https://image.tmdb.org/t/p/w92' + provider.logo_path" [alt]="provider.provider_name">
                     </div>
                   }
                 </div>
@@ -54,7 +70,7 @@
                 <div class="provider-row__badges">
                   @for (provider of rentProviders; track provider.provider_id) {
                     <div class="badge-item" [title]="provider.provider_name">
-                      <img [src]="imageBaseUrl + provider.logo_path" [alt]="provider.provider_name">
+                      <img [src]="'https://image.tmdb.org/t/p/w92' + provider.logo_path" [alt]="provider.provider_name">
                     </div>
                   }
                 </div>
@@ -64,27 +80,20 @@
           </div>
         }
 
-          <button 
-            class="btn-vault" 
-            [class.saved]="isSaved" 
-            (click)="toggleVault()">
-            {{ isSaved ? 'Remove from Vault' : 'Add to Vault' }}
-          </button>
-        </div>
       </div>
     </div>
 
     @if (cast.length > 0) {
       <div class="cast-section">
-        <h2>Cast & Crew</h2>
+        <h2>Principal Cast & Crew</h2>
         <div class="cast-slider">
           @for (actor of cast; track actor.id) {
             <div class="cast-card">
               <div class="cast-card__avatar-wrap">
                 <img 
-                  [src]="actor.profile_path ? imageBaseUrl + actor.profile_path : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'" 
+                  class="cast-card__avatar" 
+                  [src]="actor.profile_path ? 'https://image.tmdb.org/t/p/w185' + actor.profile_path : 'assets/no-avatar.png'" 
                   [alt]="actor.name"
-                  class="cast-card__avatar"
                 >
               </div>
               <p class="cast-card__name" [title]="actor.name">{{ actor.name }}</p>
@@ -94,24 +103,24 @@
         </div>
       </div>
     }
-  </div>
 
-  @if (showTrailer) {
-    <div class="trailer-modal-backdrop" (click)="closeTrailer()">
-      <div class="trailer-modal-content" (click)="$event.stopPropagation()">
-        <button class="close-btn" (click)="closeTrailer()">✕</button>
-        
-        <div class="iframe-wrapper">
-          <iframe 
-            [src]="trailerUrl" 
-            frameborder="0" 
-            allow="autoplay; encrypted-media; fullscreen" 
-            allowfullscreen>
-          </iframe>
+    @if (showTrailer && trailerUrl) {
+      <div class="trailer-modal-backdrop" (click)="showTrailer = false">
+        <div class="trailer-modal-content" (click)="$event.stopPropagation()">
+          <button class="close-btn" (click)="showTrailer = false">✕</button>
+          <div class="iframe-wrapper">
+            <iframe 
+              [src]="trailerUrl" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              allowfullscreen
+            ></iframe>
+          </div>
         </div>
       </div>
-    </div>
-  }
+    }
+
+  </div>
 } @else {
   <div class="loader-container">
     <div class="spinner"></div>

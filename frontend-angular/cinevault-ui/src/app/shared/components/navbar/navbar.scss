@@ -1,63 +1,92 @@
 /* ==========================================================================
-   CINEMATIC TOP NAVIGATION BAR
+   CINEMATIC TOP NAVIGATION BAR (THEME INTEGRATED)
    ========================================================================== */
 
 .navbar-container {
   display: flex;
   justify-content: space-between; 
   align-items: center;     
-  padding: 20px 5%;
-  background-color: #0d0d12;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 16px 5%;
+  background-color: var(--bg-main); /* Listens directly to active theme color layout */
+  border-bottom: 1px solid var(--border); 
   position: fixed;         
   top: 0;
   left: 0;
   width: 100%;
   z-index: 100;            
   box-sizing: border-box;  
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* --- Brand Identity (Now Crisp White) --- */
+/* --- Brand Identity --- */
 .navbar-logo a {
   font-size: 1.4rem;
   font-weight: 800;
-  color: #ffffff;          /* Changed from red to clean white */
+  color: var(--text-main); /* Swaps from clean white to rich black automatically */
   text-decoration: none;
   letter-spacing: -0.5px;
-  transition: opacity 0.2s ease;
-
-  &:hover {
-    opacity: 0.8;          /* Subtle fade effect on hover */
-  }
+  transition: color 0.3s ease;
 }
 
-/* --- Rigid Link Container --- */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 24px; /* Distinct breathing room dividing link lists from control switches */
+}
+
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 12px;               
+  gap: 8px;               
 }
 
-/* --- Standard Nav Hitboxes --- */
+/* --- Nav Text Hitboxes --- */
 .nav-item {
   text-decoration: none !important; 
   font-size: 0.95rem;
   font-weight: 500;
-  color: #aaaaaa;          
+  color: var(--text-muted);          
   padding: 8px 16px;       
-  border-radius: 4px;
+  border-radius: 6px;
   margin: 0;               
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    background-color: var(--glass-bg);
   }
 }
 
-/* --- Active Tracking Mechanism (Stays Cinematic Red) --- */
+/* --- State Highlighters --- */
 .active-link {
-  color: #e50914 !important; 
+  color: var(--accent) !important; /* Stays striking crimson red uniform */
   background-color: rgba(229, 9, 20, 0.05) !important; 
   font-weight: 700;
+}
+
+/* --- Glassmorphic Selector Button --- */
+.theme-toggle-btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  font-size: 1.05rem;
+  cursor: pointer;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 10px var(--shadow);
+  outline: none;
+
+  &:hover {
+    transform: scale(1.08);
+    border-color: var(--accent);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
 }

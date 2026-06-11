@@ -1,320 +1,222 @@
-/* --- Main Container --- */
+/* ==========================================================================
+   PREMIUM MOVIES & TV DETAILS VIEW (THEME-VARIABLE ARCHITECTURE)
+   ========================================================================== */
+
 .details-container {
   min-height: 100vh;
-  background-color: #0d0d12; // Standard dark background
-  color: #ffffff;
-  padding-bottom: 50px;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  padding-top: 80px; /* Gives clearance so the floating fixed navbar doesn't cover content */
+  padding-bottom: 60px;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- Hero Backdrop --- */
+/* --- 1. The Giant Dynamic Backing Art Banner --- */
 .details-hero {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 60vh; // Takes up 60% of the screen height
+  height: 70vh; /* Takes up 70% of viewport height */
   background-size: cover;
-  background-position: center top;
+  background-position: center 20%;
   background-repeat: no-repeat;
-  position: relative;
+  z-index: 1;
 
-  /* This creates a smooth fade from transparent to the dark background color */
+  /* Radial cinematic fade vignette ensures text is legible over bright backdrop art */
   &__overlay {
     position: absolute;
-    inset: 0; // shorthand for top, bottom, left, right 0
-    background: linear-gradient(to top, #0d0d12 0%, rgba(13, 13, 18, 0.2) 100%);
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(13, 13, 18, 0.2) 0%,
+      rgba(13, 13, 18, 0.5) 40%,
+      var(--bg-main) 100%
+    );
+    transition: background 0.3s ease;
   }
 }
 
-/* --- Poster & Text Layout --- */
+/* --- 2. Structural Main Panel Content Split --- */
 .details-content {
-  display: flex;
-  gap: 40px; // Space between poster and text
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 5%;
   position: relative;
-  z-index: 10;
-  margin-top: -150px; // Pulls the content UP so it overlaps the hero banner beautifully
+  z-index: 2; /* Forces content to float cleanly above the hero image background layer */
+  max-width: 1200px;
+  margin: 180px auto 0;
+  padding: 0 5%;
+  display: flex;
+  gap: 45px;
 
-  @media (max-width: 768px) {
-    flex-direction: column; // Stacks them on mobile
+  @media (max-width: 800px) {
+    flex-direction: column;
     align-items: center;
-    margin-top: -50px;
+    margin-top: 80px;
     text-align: center;
   }
 
+  /* Physical Movie Poster Image Blueprint */
   &__poster {
     width: 300px;
-    height: auto;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); // Drop shadow to make it pop off the background
+    height: 450px;
     object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px var(--shadow);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-    @media (max-width: 768px) {
+    @media (max-width: 800px) {
       width: 200px;
+      height: 300px;
     }
   }
 
+  /* Text Information Core Content Stack */
   &__info {
-    flex: 1; // Takes up the remaining space
-    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     h1 {
       font-size: 3rem;
-      margin-bottom: 10px;
+      margin: 0 0 12px 0;
+      font-weight: 800;
+      letter-spacing: -1px;
       line-height: 1.1;
+      color: var(--text-main);
+
+      @media (max-width: 800px) {
+        font-size: 2rem;
+      }
     }
 
+    /* Cinematic Meta Row Tokens */
     .meta-data {
       display: flex;
-      gap: 12px;
       align-items: center;
-      color: #aaaaaa;
-      font-size: 1.1rem;
+      gap: 12px;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      font-weight: 500;
       margin-bottom: 24px;
 
-      @media (max-width: 768px) {
+      @media (max-width: 800px) {
         justify-content: center;
       }
 
-      .rating {
+      .separator {
+        color: var(--accent);
         font-weight: bold;
-        color: #fff;
+      }
+
+      .rating {
+        background-color: var(--glass-bg);
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        color: var(--text-main);
+        font-weight: bold;
       }
     }
 
+    /* Core Movie Summary Body Paragraph */
     .overview {
       font-size: 1.1rem;
       line-height: 1.6;
-      color: #dddddd;
-      max-width: 800px;
-      margin-bottom: 30px;
+      color: var(--text-main);
+      max-width: 750px;
+      margin: 0 0 30px 0;
+      opacity: 0.9;
     }
   }
 }
 
-/* --- Interactive Button --- */
-.btn-vault {
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #fff;
-  background-color: #e50914; // Netflix Red
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: #f6121d;
-    transform: translateY(-2px);
-  }
-
-  // State when movie is already saved
-  &.saved {
-    background-color: #333333;
-    color: #aaaaaa;
-
-    &:hover {
-      background-color: #444444;
-    }
-  }
-}
-
-/* --- Loading Spinner --- */
-.loader-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #0d0d12;
-
-  .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid rgba(255, 255, 255, 0.1);
-    border-left-color: #e50914;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-/* --- Button Layout --- */
+/* --- 3. Integrated Action Button Interfaces --- */
 .button-group {
   display: flex;
   gap: 15px;
-  margin-top: 20px;
+  margin-top: 10px;
+
+  @media (max-width: 800px) {
+    justify-content: center;
+  }
 }
 
 .btn-play {
-  padding: 12px 24px;
+  padding: 14px 28px;
   font-size: 1rem;
-  font-weight: bold;
-  color: #000;
-  background-color: #fff; // Netflix style play button
+  font-weight: 700;
+  color: #000000; /* Stays dark for classic premium media system contrast styling */
+  background-color: #ffffff; 
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
     background-color: #e6e6e6;
     transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }
 
-/* --- Trailer Modal --- */
-.trailer-modal-backdrop {
-  position: fixed;
-  inset: 0; // covers entire screen
-  background-color: rgba(0, 0, 0, 0.9); // Dark cinematic dimming
-  z-index: 1000; // Sits on top of EVERYTHING
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.trailer-modal-content {
-  position: relative;
-  width: 100%;
-  max-width: 1000px; // Cap the width on massive screens
-  background: #000;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-}
-
-.close-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 1.2rem;
+.btn-vault {
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  background-color: var(--glass-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
   cursor: pointer;
-  z-index: 10;
-  transition: background 0.3s ease;
+  box-shadow: 0 4px 12px var(--shadow);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    background: rgba(229, 9, 20, 0.8); // Netflix red on hover
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: var(--text-muted);
+    transform: translateY(-2px);
+  }
+
+  /* When movie exists inside LocalStorage network registry */
+  &.saved {
+    background-color: rgba(229, 9, 20, 0.1) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }
 
-/* This forces a perfect 16:9 Aspect Ratio for the YouTube Player! */
-.iframe-wrapper {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* 16:9 ratio */
-  height: 0;
-
-  iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-}
-/* --- Cast & Crew Layout --- */
-.cast-section {
-  max-width: 1200px;
-  margin: 60px auto 0;
-  padding: 0 5%;
-  position: relative;
-  z-index: 10;
-
-  h2 {
-    font-size: 1.8rem;
-    margin-bottom: 24px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-  }
-}
-
-.cast-slider {
-  display: flex;
-  gap: 24px;
-  overflow-x: auto; // Enables horizontal scrolling!
-  padding-bottom: 20px;
-  scroll-behavior: smooth;
-  
-  /* Customized Modern Scrollbar */
-  &::-webkit-scrollbar {
-    height: 6px;
-  }
-  &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
-    transition: background 0.3s ease;
-
-    &:hover {
-      background: #e50914; // Changes to Netflix Red on hover
-    }
-  }
-}
-
-.cast-card {
-  flex: 0 0 110px; // CRITICAL: Tells flexbox never to squish or warp these cards
-  text-align: center;
-
-  &__avatar-wrap {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 12px;
-    border-radius: 50%; // Makes the image perfectly round
-    overflow: hidden;
-    background-color: #1a1a1a;
-    border: 2px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  }
-
-  &__avatar {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; // Prevents actors' faces from looking stretched
-  }
-
-  &__name {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #ffffff;
-    margin: 0 0 4px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; // Cuts off super long names with ...
-  }
-
-  &__character {
-    font-size: 0.8rem;
-    color: #888888;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-/* --- Watch Providers Display Panel --- */
+/* --- 4. Stream Provider Network Availability Module --- */
 .providers-wrapper {
-  margin-top: 30px;
-  padding: 15px 20px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: 35px;
+  padding: 16px 24px;
+  background: var(--glass-bg);
+  border-radius: 10px;
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  max-width: 500px; // Keeps the dashboard compact
+  gap: 16px;
+  max-width: 550px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.02);
+
+  @media (max-width: 800px) {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
 }
 
 .provider-row {
@@ -323,12 +225,12 @@
   gap: 15px;
 
   &__label {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #888888;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    min-width: 80px; // Ensures labels align beautifully in a straight vertical line
+    letter-spacing: 0.8px;
+    min-width: 85px; 
   }
 
   &__badges {
@@ -341,13 +243,15 @@
 .badge-item {
   width: 36px;
   height: 36px;
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease;
+  box-shadow: 0 4px 8px var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: help;
 
   &:hover {
-    transform: scale(1.1); // Dynamic zoom on mouseover
+    transform: scale(1.15) translateY(-2px);
   }
 
   img {
@@ -355,4 +259,180 @@
     height: 100%;
     object-fit: cover;
   }
+}
+
+/* --- 5. Horizontal Scrolling Cast & Crew Gallery Row --- */
+.cast-section {
+  max-width: 1200px;
+  margin: 60px auto 0;
+  padding: 0 5%;
+  position: relative;
+  z-index: 10;
+
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text-main);
+  }
+}
+
+.cast-slider {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto; 
+  padding-bottom: 20px;
+  scroll-behavior: smooth;
+  
+  /* Webkit Track Customizations */
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--glass-bg);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: var(--accent); /* Illuminates to signature crimson red on scroll hover track */
+    }
+  }
+}
+
+.cast-card {
+  flex: 0 0 110px; /* Locks structure sizes completely */
+  text-align: center;
+
+  &__avatar-wrap {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 14px;
+    border-radius: 50%; 
+    overflow: hidden;
+    background-color: var(--bg-card);
+    border: 2px solid var(--border);
+    box-shadow: 0 8px 16px var(--shadow);
+    transition: border-color 0.3s ease;
+  }
+
+  &:hover &__avatar-wrap {
+    border-color: var(--accent);
+  }
+
+  &__avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+  }
+
+  &__name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 0 0 4px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Cuts off overflow names with ... dots automatically */
+  }
+
+  &__character {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* --- 6. Cinematic Overlay Media Streams Player Modal --- */
+.trailer-modal-backdrop {
+  position: fixed;
+  inset: 0; 
+  background-color: rgba(0, 0, 0, 0.9); /* Remains deep black across all themes for theatre immersion */
+  z-index: 1000; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+}
+
+.trailer-modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 1000px; 
+  background: #000000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--accent);
+    transform: scale(1.05);
+    color: white;
+  }
+}
+
+/* Strict Mathematical 16:9 Landscape Aspect Ratio Box Wrapper */
+.iframe-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 9 divided by 16 * 100 */
+  height: 0;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* --- 7. Fallback Activity Loaders --- */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background-color: var(--bg-main);
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--glass-bg);
+  border-left-color: var(--accent);
+  border-radius: 50%;
+  animation: detailsSpin 1s linear infinite;
+}
+
+@keyframes detailsSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

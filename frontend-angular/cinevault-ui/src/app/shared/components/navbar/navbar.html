@@ -3,21 +3,28 @@
     <a routerLink="/">CineVault</a>
   </div>
 
-  <div class="navbar-links">
-    <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
-      Home
-    </a>
-    
-    <a routerLink="/search" routerLinkActive="active-link" class="nav-item">
-      Search
-    </a>
-    
-    <a routerLink="/vault" routerLinkActive="active-link" class="nav-item">
-      My Vault
-    </a>
-    
-    <a routerLink="/discover" routerLinkActive="active-link" class="nav-item">
-      Advanced Filter
-    </a>
+  <div class="navbar-right">
+    <div class="navbar-links">
+      <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+        Home
+      </a>
+      <a routerLink="/search" routerLinkActive="active-link" class="nav-item">
+        Search
+      </a>
+      <a routerLink="/vault" routerLinkActive="active-link" class="nav-item">
+        My Vault
+      </a>
+      <a routerLink="/discover" routerLinkActive="active-link" class="nav-item">
+        Advanced Filter
+      </a>
+    </div>
+
+    <button 
+      class="theme-toggle-btn" 
+      (click)="toggleTheme()" 
+      [title]="isDarkMode ? 'Switch to Studio Light' : 'Switch to Cinema Dark'"
+    >
+      {{ isDarkMode ? '☀️' : '🌙' }}
+    </button>
   </div>
 </nav>

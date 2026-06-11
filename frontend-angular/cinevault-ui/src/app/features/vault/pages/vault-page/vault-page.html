@@ -1,21 +1,25 @@
 <div class="vault-container">
+  
   <div class="vault-header">
-    <h1>My Vault</h1>
-    <p>Your personal collection of cinematic masterpieces.</p>
+    <h1>Your Secured Vault</h1>
+    
   </div>
 
-  @if (savedMovies.length > 0) {
-    <div class="movies-grid">
-      @for (movie of savedMovies; track movie.id) {
-        <app-movie-card [movie]="movie"></app-movie-card>
+  @if (vaultItems.length > 0) {
+    <div class="movie-grid">
+      @for (item of vaultItems; track item.id) {
+        <app-media-card [movie]="item" (remove)="removeFromVault($event)"></app-media-card>
       }
     </div>
   } @else {
-    <div class="empty-state">
-      <div class="empty-icon">🎬</div>
-      <h2>Your Vault is Empty</h2>
-      <p>You haven't saved any movies or TV shows yet.</p>
-      <a routerLink="/search" class="btn-explore">Explore Titles</a>
+    <div class="empty-vault">
+      <div class="empty-icon-wrapper">
+        <span class="empty-icon">📁</span>
+        <div class="empty-glow"></div>
+      </div>
+      <h2>Your vault is secured but empty</h2>
+      <p>Explore the home or discover dashboards and tap the vault icon to preserve media items directly in your local cache engine.</p>
+      <a routerLink="/" class="btn-browse">Browse Trending Media</a>
     </div>
   }
 </div>

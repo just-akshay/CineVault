@@ -2,11 +2,12 @@ import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Movie } from '../../../core/models/movie.model';
 import { TMDB_CONFIG } from '../../../core/constants/tmdb.constants';
-
+import { DecimalPipe } from '@angular/common';
+import { CommonModule } from '@angular/common'; // <-- 1. Add this import statement
 @Component({
   selector: 'app-movie-card',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, DecimalPipe, CommonModule], // <-- 2. Include CommonModule here 
   templateUrl: './movie-card.html',
   styleUrls: ['./movie-card.scss']
 })

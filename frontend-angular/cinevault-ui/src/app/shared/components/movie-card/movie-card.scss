@@ -1,71 +1,75 @@
 .movie-card {
-  width: 168px;
-  display: block;
-  color: #ffffff;
-  text-decoration: none;
+  width: 180px;
+  flex: 0 0 180px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background: transparent !important;
+  border: none !important;
+  overflow: visible;
+  text-decoration: none !important; /* Double-ensures text decoration stays away */
+  cursor: pointer;                  /* Forces hand pointer icon on mouse hover */
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-6px);
+  }
 }
 
-.movie-card__poster-wrap {
-  position: relative;
-  aspect-ratio: 2 / 3;
-  overflow: hidden;
-  background: #1a1a22;
+/* ... keep all your other poster-wrapper, img, and h3 styles exactly the same below this ... */
+
+/* --- The Image Box Anchor --- */
+.poster-wrapper {
+  position: relative; /* Crucial: Locks the absolute rating badge to THIS box */
+  width: 100%;
+  height: 270px;
   border-radius: 8px;
+  overflow: hidden; /* Clips the image and badge to your rounded corners */
+  box-shadow: 0 6px 16px var(--shadow);
+  transition: box-shadow 0.2s ease-in-out;
 }
 
-.movie-card__poster {
+.movie-card:hover .poster-wrapper {
+  box-shadow: 0 12px 24px var(--shadow);
+}
+
+.poster-wrapper img {
   width: 100%;
   height: 100%;
-  display: block;
   object-fit: cover;
-  transition: transform 0.25s ease;
 }
 
-.movie-card:hover .movie-card__poster {
-  transform: scale(1.05);
-}
-
-.movie-card__rating {
+/* --- Floating Glassmorphic Rating Badge --- */
+.card-rating {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  padding: 4px 7px;
-  background: rgba(0, 0, 0, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 800;
-}
-
-.movie-card__content {
-  padding-top: 10px;
-}
-
-.movie-card__content h3 {
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.3;
-}
-
-.movie-card__meta {
-  margin-top: 6px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  color: #a7a7b3;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.65); /* Dark semi-transparent backing */
+  backdrop-filter: blur(4px);      /* Premium glass effect */
+  color: #ffffff !important;       /* Stays white for crisp contrast against posters */
   font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 2;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-@media (max-width: 768px) {
-  .movie-card {
-    width: 136px;
-  }
+/* --- Clean Outside Typography --- */
+.movie-card h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 12px 0 4px 0; /* 0 on left/right ensures perfect flush alignment */
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-  .movie-card__content h3 {
-    font-size: 0.86rem;
-  }
-
-  .movie-card__meta {
-    font-size: 0.74rem;
-  }
+.movie-card span, 
+.movie-card .year {
+  font-size: 0.85rem;
+  margin: 0;
+  color: var(--text-muted);
 }

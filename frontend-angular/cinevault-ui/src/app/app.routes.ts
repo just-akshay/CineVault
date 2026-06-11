@@ -1,47 +1,44 @@
 import { Routes } from '@angular/router';
-import { HomePageComponent } from './features/home/pages/home-page/home-page';
 
-// 1. Import your details component
-import { MovieDetailsPageComponent } from './features/movie-details/pages/movie-details-page/movie-details-page';
-import { FilterPageComponent } from './features/filter/pages/filter-page/filter-page';
 export const routes: Routes = [
-
-    // 2. Add the dynamic route for the movie details
-{ path: 'details/:type/:id', component: MovieDetailsPageComponent },
-{ path: 'discover', component: FilterPageComponent },
-  {
-    path: '',
-    loadComponent: () =>
-      import('./features/home/pages/home-page/home-page').then(
-        (m) => m.HomePageComponent
-      ),
+  // 1. Unified Media Details Route (Handles both Movies & TV Shows/Anime)
+  { 
+    path: 'details/:type/:id', 
+    loadComponent: () => import('./features/movie-details/pages/movie-details-page/movie-details-page')
+      .then(m => m.MovieDetailsPageComponent) 
   },
+
+  // 2. Advanced Filter Page Route
+  { 
+    path: 'discover', 
+    loadComponent: () => import('./features/filter/pages/filter-page/filter-page')
+      .then(m => m.FilterPageComponent) 
+  },
+
+  // 3. Search Dashboard Route
   {
     path: 'search',
-    loadComponent: () =>
-      import('./features/search/pages/search-page/search-page').then(
-        (m) => m.SearchPageComponent
-      ),
+    loadComponent: () => import('./features/search/pages/search-page/search-page')
+      .then(m => m.SearchPageComponent),
   },
+
+  // 4. Personalized Vault Route
   {
     path: 'vault',
-    loadComponent: () =>
-      import('./features/vault/pages/vault-page/vault-page').then(
-        (m) => m.VaultPageComponent
-      ),
+    loadComponent: () => import('./features/vault/pages/vault-page/vault-page')
+      .then(m => m.VaultPageComponent),
   },
+
+  // 5. Core Entry Point (Lazy-Loaded Home Dashboard)
   {
-    path: 'movie/:id',
-    loadComponent: () =>
-      import(
-        './features/movie-details/pages/movie-details-page/movie-details-page'
-      ).then((m) => m.MovieDetailsPageComponent),
+    path: '',
+    loadComponent: () => import('./features/home/pages/home-page/home-page')
+      .then(m => m.HomePageComponent),
   },
+
+  // 6. Wildcard Catch-All (CRUCIAL: Must always be at the absolute bottom!)
   {
     path: '**',
     redirectTo: '',
-  },
-  { path: '', component: HomePageComponent },
-  
-
+  }
 ];

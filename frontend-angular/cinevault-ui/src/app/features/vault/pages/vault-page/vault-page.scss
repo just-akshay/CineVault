@@ -68,3 +68,85 @@
     }
   }
 }
+/* ... keep your existing .vault-container and .vault-header rules ... */
+
+// Core responsive asset grid configuration
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+// 💀 The "Ugly State Killer" - Premium Empty Vault Configuration 💀
+.empty-vault {
+  margin: 60px auto;
+  max-width: 480px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  background: #111; /* Subtle dashboard dark background */
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Very clean border definition */
+
+  .empty-icon-wrapper {
+    position: relative;
+    margin-bottom: 30px;
+
+    .empty-icon {
+      font-size: 64px;
+      display: block;
+      position: relative;
+      z-index: 2;
+    }
+
+    // Premium subtle ambient glow effect
+    .empty-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      height: 100px;
+      background: rgba(253, 186, 11, 0.2); /* Soft ambient gold blur */
+      border-radius: 50%;
+      filter: blur(30px);
+      z-index: 1;
+    }
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 30px;
+  }
+
+  .btn-browse {
+    display: inline-block;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+  }
+}

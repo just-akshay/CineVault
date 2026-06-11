@@ -1,16 +1,16 @@
-<a class="movie-card" [routerLink]="getRouteUrl()">
+<a [routerLink]="['/details', movie.media_type || (movie.first_air_date ? 'tv' : 'movie'), movie.id]" class="movie-card">
   
-  <div class="movie-card__poster-wrap">
-    <img
-      class="movie-card__poster"
-      [src]="imageBaseUrl + movie.poster_path" 
-      [alt]="(movie.title || movie.name) + ' poster'"
-    />
-    <span class="movie-card__rating">{{ movie.vote_average?.toFixed(1) }}</span>
+  <div class="poster-wrapper">
+    <img [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path : 'assets/no-poster.png'" [alt]="movie.title">
+    
+    @if (movie.vote_average && movie.vote_average > 0) {
+      <div class="card-rating">
+        {{ movie.vote_average | number:'1.1-1' }}
+      </div>
+    }
   </div>
 
-  <div class="movie-card__content">
-    <h3 class="card-title">{{ movie.title || movie.name }}</h3>
-    <span class="card-year">{{ getYear() }}</span>  
-  </div>
+  <h3>{{ movie.title || movie.name }}</h3>
+  <span>{{ ((movie.release_date || movie.first_air_date) | date:'yyyy') || 'N/A' }}</span>
+
 </a>
