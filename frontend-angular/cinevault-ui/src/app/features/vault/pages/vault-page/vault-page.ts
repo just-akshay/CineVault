@@ -23,14 +23,22 @@ export class VaultPageComponent implements OnInit {
     this.loadVault();
   }
 
-  loadVault(): void {
+ loadVault(): void {
     this.vaultService.getVaultItems().subscribe({
-      // 2. Explicitly type 'data' as an array of VaultItems to satisfy strict mode
       next: (data: VaultItem[]) => {
-        this.vaultItems = data;
+        this.vaultItems = data.map(item => {
+          return {
+            ...item, 
+            poster_path: item.posterPath ? `https://image.tmdb.org/t/p/w500${item.posterPath}` : null,
+            release_date: item.releaseDate,
+            
+            // ADD THIS LINE: Map the Java camelCase back to snake_case for the UI card
+            vote_average: item.voteAverage 
+          };
+        });
+        
         this.cdr.detectChanges();
       },
-      // 3. Explicitly type 'err' as 'any' to satisfy strict mode
       error: (err: any) => {
         console.error('Failed to get database vault items:', err);
       }

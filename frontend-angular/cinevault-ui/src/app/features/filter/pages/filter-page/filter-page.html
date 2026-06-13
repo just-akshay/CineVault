@@ -40,6 +40,15 @@
     </div>
   }
 
+  <div class="load-more-container" *ngIf="filteredMovies.length > 0">
+    <button 
+      class="load-more-btn" 
+      (click)="loadMore()" 
+      [disabled]="isLoading">
+      {{ isLoading ? 'Loading Data...' : 'Load More Movies' }}
+    </button>
+  </div>
+  
   @if (!isLoading && filteredMovies.length === 0) {
     <div class="empty-state">
       <h2>No matches found</h2>

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MovieService } from '../../../../core/services/movie.service';
+import { VaultItem, VaultService } from '../../../../core/services/vault-service';
+// 1. Import your new Vault Service and Interface
 
 @Component({
   selector: 'app-movie-details-page',
@@ -16,7 +18,6 @@ export class MovieDetailsPageComponent implements OnInit {
   isSaved: boolean = false;
   cast: any[] = [];
   
-  // Watch Provider streams
   streamProviders: any[] = [];
   rentProviders: any[] = [];
   imageBaseUrl: string = 'https://image.tmdb.org/t/p/original';
@@ -27,17 +28,17 @@ export class MovieDetailsPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private movieService: MovieService,
+    // 2. Inject the Vault Service here
+    private vaultService: VaultService,
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      // FIX: If 'type' is missing from the URL, automatically default to 'movie'
       const type = params.get('type') || 'movie'; 
       const id = params.get('id');
 
-      // Now we only need a valid ID to trigger the network fetch!
       if (id) {
         this.movieService.getDetails(type, id).subscribe({
           next: (data) => {
@@ -86,37 +87,53 @@ export class MovieDetailsPageComponent implements OnInit {
     });
   }
   
-
-  // Temporary local storage stub until your Java Backend is running
-checkIfSaved(): void {
+  // 3. Ask the database if this movie is already saved
+  checkIfSaved(): void {
     if (!this.movie) return;
-    const vault = JSON.parse(localStorage.getItem('cinevault_items') || '[]');
-    // FIX: Force both IDs to Numbers so comparison never fails silently
-    this.isSaved = vault.some((item: any) => Number(item.id) === Number(this.movie.id));
+    
+    this.vaultService.getVaultItems().subscribe({
+      next: (vaultItems) => {
+        // Compare the current movie ID against the database IDs
+        this.isSaved = vaultItems.some(item => Number(item.id) === Number(this.movie.id));
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Failed to verify vault status:', err)
+    });
   }
 
+  // 4. Send the data to MySQL instead of LocalStorage!
   toggleVault(): void {
     if (!this.movie) return;
-    let vault = JSON.parse(localStorage.getItem('cinevault_items') || '[]');
     
     if (this.isSaved) {
-      // FIX: Filter items safely using numeric evaluation
-      vault = vault.filter((item: any) => Number(item.id) !== Number(this.movie.id));
-      this.isSaved = false;
+      // If it's already saved, tell the Java backend to delete it
+      this.vaultService.removeFromVault(this.movie.id).subscribe({
+        next: () => {
+          this.isSaved = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error('Failed to remove from database vault:', err)
+      });
     } else {
-      // Build a clean, uniform object data structure for your Vault Page layout to read
-      vault.push({
+      // Build a clean VaultItem to send to Java
+      // Notice the camelCase keys matching your Java Entity!
+      const newItem: VaultItem = {
         id: Number(this.movie.id),
         title: this.movie.title || this.movie.name,
-        poster_path: this.movie.poster_path,
-        vote_average: this.movie.vote_average,
-        release_date: this.movie.release_date || this.movie.first_air_date,
-        media_type: this.movie.first_air_date ? 'tv' : 'movie'
+        posterPath: this.movie.poster_path, 
+        voteAverage: this.movie.vote_average,
+        releaseDate: this.movie.release_date || this.movie.first_air_date,
+        mediaType: this.movie.first_air_date ? 'tv' : 'movie'
+      };
+
+      // Push it to the backend via POST request
+      this.vaultService.addToVault(newItem).subscribe({
+        next: () => {
+          this.isSaved = true;
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error('Failed to save to database vault:', err)
       });
-      this.isSaved = true;
     }
-    
-    localStorage.setItem('cinevault_items', JSON.stringify(vault));
-    this.cdr.detectChanges();
   }
 }

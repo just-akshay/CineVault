@@ -1,41 +1,59 @@
 import { Component, OnInit, Renderer2, Inject } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../../core/services/auth'; 
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive], // Removed FormsModule
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.scss']
 })
 export class NavbarComponent implements OnInit {
   isDarkMode: boolean = true;
+  isLoggedIn$: any;
 
   constructor(
+    private authService: AuthService, 
+    private router: Router,
     private renderer: Renderer2,
-    // Safely look up the platform Document object in Angular standalone setups
     @Inject(DOCUMENT) private document: Document
-  ) {}
+  ) {
+    this.isLoggedIn$ = this.authService.isLoggedIn$;
+  }
 
   ngOnInit(): void {
-    // Check browser notebook storage for previous preferences, defaulting to Dark Mode
     const savedTheme = localStorage.getItem('cinevault-theme') || 'dark';
     this.isDarkMode = savedTheme === 'dark';
     this.applyTheme(savedTheme);
   }
 
+  onLogout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
   toggleTheme(): void {
     this.isDarkMode = !this.isDarkMode;
     const newTheme = this.isDarkMode ? 'dark' : 'light';
-    
-    // Save to the browser notebook so it remembers on page refreshes
     localStorage.setItem('cinevault-theme', newTheme);
     this.applyTheme(newTheme);
   }
 
   private applyTheme(theme: string): void {
-    // Safely switches <body data-theme="dark/light">
     this.renderer.setAttribute(this.document.body, 'data-theme', theme);
+  }
+  
+  onSearch(query: string): void {
+    if (query.trim()) {
+      this.router.navigate(['/search'], { queryParams: { q: query }, queryParamsHandling: 'merge' });
+    }
+  }
+
+  // --- THE FIX: Route directly to your existing component ---
+  toggleAdvancedFilter(): void {
+    // Change '/filter' to whatever route path you actually gave your filter page in app.routes.ts!
+    this.router.navigate(['/filter']); 
   }
 }

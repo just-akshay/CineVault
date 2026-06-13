@@ -1,0 +1,46 @@
+<div class="auth-container">
+  <div class="auth-card fade-in-up">
+    <div class="auth-header">
+      <h2>Welcome Back</h2>
+      <p>Enter your credentials to access your vault.</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="auth-form">
+      
+      <div class="error-banner" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          name="username" 
+          [(ngModel)]="credentials.username" 
+          required 
+          placeholder="e.g., cinephile99"
+          autocomplete="off">
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          [(ngModel)]="credentials.password" 
+          required 
+          placeholder="••••••••">
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="isLoading">
+        {{ isLoading ? 'Authenticating...' : 'Enter Vault' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>New to CineVault? <a routerLink="/register">Sign up here</a></p>
+    </div>
+  </div>
+</div>

@@ -1,30 +1,46 @@
-<nav class="navbar-container">
-  <div class="navbar-logo">
-    <a routerLink="/">CineVault</a>
+<nav class="navbar">
+  <div class="nav-brand">
+    <a routerLink="/" class="brand-text">CINE<span>VAULT</span></a>
   </div>
 
-  <div class="navbar-right">
-    <div class="navbar-links">
-      <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
-        Home
-      </a>
-      <a routerLink="/search" routerLinkActive="active-link" class="nav-item">
-        Search
-      </a>
-      <a routerLink="/vault" routerLinkActive="active-link" class="nav-item">
-        My Vault
-      </a>
-      <a routerLink="/discover" routerLinkActive="active-link" class="nav-item">
-        Advanced Filter
-      </a>
+  <div class="nav-search">
+    <div class="search-group">
+      <input 
+        type="text" 
+        placeholder="Search movies..." 
+        #searchInput 
+        (keyup.enter)="onSearch(searchInput.value)">
+      
+      <div class="search-divider"></div>
+      
+      <button class="advance-filter-btn" (click)="toggleAdvancedFilter()" title="Advanced Filter">
+        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
+          <line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line>
+          <line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line>
+          <line x1="17" y1="16" x2="23" y2="16"></line>
+        </svg>
+        <span>Filter</span>
+      </button>
     </div>
+  </div>
 
-    <button 
-      class="theme-toggle-btn" 
-      (click)="toggleTheme()" 
-      [title]="isDarkMode ? 'Switch to Studio Light' : 'Switch to Cinema Dark'"
-    >
-      {{ isDarkMode ? '☀️' : '🌙' }}
+  <div class="nav-links">
+    <ng-container *ngIf="isLoggedIn$ | async; else loggedOutLinks">
+      <a routerLink="/vault" routerLinkActive="active" class="nav-item">My Vault</a>
+      <button class="nav-btn logout-btn" (click)="onLogout()">Logout</button>
+    </ng-container>
+
+    <ng-template #loggedOutLinks>
+      <a routerLink="/login" class="nav-item">Login</a>
+      <a routerLink="/register" class="nav-btn login-btn">Sign Up</a>
+    </ng-template>
+
+    <div class="divider"></div>
+    <button class="theme-toggle-btn" (click)="toggleTheme()" aria-label="Toggle Theme">
+      <span *ngIf="isDarkMode">☀️ Light</span>
+      <span *ngIf="!isDarkMode">🌙 Dark</span>
     </button>
   </div>
 </nav>

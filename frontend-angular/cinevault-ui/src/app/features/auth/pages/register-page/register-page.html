@@ -1,0 +1,57 @@
+<div class="auth-container">
+  <div class="auth-card fade-in-up">
+    <div class="auth-header">
+      <h2>Join CineVault</h2>
+      <p>Create your secured database today.</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #registerForm="ngForm" class="auth-form">
+      
+      <div class="error-banner" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+      <div class="success-banner" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="input-group">
+        <label for="username">Choose a Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          name="username" 
+          [(ngModel)]="credentials.username" 
+          required 
+          autocomplete="off">
+      </div>
+
+      <div class="input-group">
+        <label for="password">Create Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          [(ngModel)]="credentials.password" 
+          required>
+      </div>
+
+      <div class="input-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input 
+          type="password" 
+          id="confirmPassword" 
+          name="confirmPassword" 
+          [(ngModel)]="credentials.confirmPassword" 
+          required>
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="isLoading || successMessage !== ''">
+        {{ isLoading ? 'Encrypting Credentials...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Already have a vault? <a routerLink="/login">Log in here</a></p>
+    </div>
+  </div>
+</div>

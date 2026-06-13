@@ -1,92 +1,186 @@
-/* ==========================================================================
-   CINEMATIC TOP NAVIGATION BAR (THEME INTEGRATED)
-   ========================================================================== */
-
-.navbar-container {
+// Base Navbar Styling (Defaults to Dark Theme aesthetic)
+.navbar {
   display: flex;
-  justify-content: space-between; 
-  align-items: center;     
-  padding: 16px 5%;
-  background-color: var(--bg-main); /* Listens directly to active theme color layout */
-  border-bottom: 1px solid var(--border); 
-  position: fixed;         
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem;
+  background-color: var(--nav-bg, rgba(10, 10, 10, 0.95));
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--nav-border, rgba(255, 255, 255, 0.05));
+  position: sticky;
   top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 100;            
-  box-sizing: border-box;  
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* --- Brand Identity --- */
-.navbar-logo a {
-  font-size: 1.4rem;
+.nav-brand .brand-text {
+  font-size: 1.5rem;
   font-weight: 800;
-  color: var(--text-main); /* Swaps from clean white to rich black automatically */
+  color: var(--text-primary, #fff);
   text-decoration: none;
-  letter-spacing: -0.5px;
-  transition: color 0.3s ease;
-}
-
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 24px; /* Distinct breathing room dividing link lists from control switches */
-}
-
-.navbar-links {
-  display: flex;
-  align-items: center;
-  gap: 8px;               
-}
-
-/* --- Nav Text Hitboxes --- */
-.nav-item {
-  text-decoration: none !important; 
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text-muted);          
-  padding: 8px 16px;       
-  border-radius: 6px;
-  margin: 0;               
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    color: var(--text-main);
-    background-color: var(--glass-bg);
-  }
-}
-
-/* --- State Highlighters --- */
-.active-link {
-  color: var(--accent) !important; /* Stays striking crimson red uniform */
-  background-color: rgba(229, 9, 20, 0.05) !important; 
-  font-weight: 700;
-}
-
-/* --- Glassmorphic Selector Button --- */
-.theme-toggle-btn {
-  background: var(--glass-bg);
-  border: 1px solid var(--border);
-  color: var(--text-main);
-  font-size: 1.05rem;
-  cursor: pointer;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 10px var(--shadow);
-  outline: none;
-
-  &:hover {
-    transform: scale(1.08);
-    border-color: var(--accent);
-  }
+  letter-spacing: 2px;
+  transition: transform 0.2s ease, color 0.3s ease;
   
-  &:active {
-    transform: scale(0.95);
+  span { color: #e50914; } // Always CineVault Red
+  &:hover { transform: scale(1.05); }
+}
+
+// --- SEARCH & FILTER BAR STYLES ---
+.nav-search {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 2rem;
+
+  .search-group {
+    display: flex;
+    align-items: center;
+    background: var(--search-bg, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--nav-border, rgba(255, 255, 255, 0.1));
+    border-radius: 30px;
+    padding: 0.3rem 0.5rem 0.3rem 1.2rem;
+    width: 100%;
+    max-width: 500px;
+    transition: all 0.3s ease;
+
+    &:focus-within {
+      border-color: #e50914;
+      box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.15);
+      background: var(--search-focus-bg, rgba(20, 20, 20, 0.8));
+    }
+
+    input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-primary, #fff);
+      font-size: 0.95rem;
+      outline: none;
+      padding: 0.5rem 0;
+
+      &::placeholder {
+        color: var(--text-secondary, #888);
+      }
+    }
+
+    .search-divider {
+      width: 1px;
+      height: 20px;
+      background-color: var(--nav-border, rgba(255, 255, 255, 0.1));
+      margin: 0 0.5rem;
+    }
+
+    .advance-filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary, #d0d0d0);
+      cursor: pointer;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: var(--hover-bg, rgba(255, 255, 255, 0.1));
+        color: var(--text-primary, #fff);
+      }
+    }
+  }
+}
+
+// --- NAVIGATION LINKS & BUTTONS ---
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+
+  .nav-item {
+    color: var(--text-secondary, #d0d0d0);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+
+    &:hover, &.active { color: var(--text-primary, #fff); }
+    &.active {
+      border-bottom: 2px solid #e50914;
+      padding-bottom: 4px;
+    }
+  }
+
+  .nav-btn {
+    padding: 0.5rem 1.2rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: none;
+
+    &.login-btn {
+      background-color: #e50914;
+      color: white;
+      &:hover {
+        background-color: #f40612;
+        transform: translateY(-2px);
+      }
+    }
+
+    &.logout-btn {
+      background-color: transparent;
+      border: 1px solid var(--text-secondary, rgba(255, 255, 255, 0.2));
+      color: var(--text-secondary, #d0d0d0);
+      &:hover {
+        border-color: var(--text-primary, #fff);
+        color: var(--text-primary, #fff);
+      }
+    }
+  }
+
+  .divider {
+    width: 1px;
+    height: 24px;
+    background-color: var(--nav-border, rgba(255, 255, 255, 0.2));
+    margin: 0 0.5rem;
+  }
+
+  .theme-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--nav-border, rgba(255, 255, 255, 0.2));
+    color: var(--text-primary, #fff);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: var(--hover-bg, rgba(255, 255, 255, 0.1));
+      transform: scale(1.05);
+    }
+  }
+}
+
+// --- LIGHT MODE OVERRIDES ---
+// When your TS file sets data-theme="light" on the body, these variables take over!
+:global(body[data-theme='light']) {
+  .navbar {
+    --nav-bg: rgba(255, 255, 255, 0.95);
+    --nav-border: rgba(0, 0, 0, 0.1);
+    --text-primary: #111;
+    --text-secondary: #555;
+    --hover-bg: rgba(0, 0, 0, 0.05);
+    --search-bg: rgba(0, 0, 0, 0.03);
+    --search-focus-bg: rgba(255, 255, 255, 1);
   }
 }

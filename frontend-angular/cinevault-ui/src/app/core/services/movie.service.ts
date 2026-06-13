@@ -97,12 +97,13 @@ export class MovieService {
     return this.popularTvCache$;
   }
   // Advanced discovery engine
-  getFilteredMovies(minRating: number, minYear: number): Observable<Movie[]> {
+ getFilteredMovies(minRating: number, minYear: number, page: number = 1): Observable<Movie[]> {
     const url = `${this.apiUrl}/discover/movie?api_key=${this.apiKey}` +
                 `&vote_average.gte=${minRating}` +
                 `&primary_release_date.gte=${minYear}-01-01` +
                 `&vote_count.gte=200` + // Ensures crowd consensus
-                `&sort_by=popularity.desc`; // Puts the best known titles first
+                `&sort_by=popularity.desc` + // Puts the best known titles first
+                `&page=${page}`; // <-- The magic pagination parameter!
 
     return this.http.get<TmdbResponse>(url).pipe(
       map(response => response.results.map(movie => ({ ...movie, media_type: 'movie' })))

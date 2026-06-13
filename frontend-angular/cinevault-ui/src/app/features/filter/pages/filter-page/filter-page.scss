@@ -71,3 +71,41 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+  width: 100%;
+
+  .load-more-btn {
+    background-color: transparent;
+    border: 2px solid #e50914; // CineVault Red
+    color: #e50914;
+    padding: 0.8rem 2.5rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &:hover:not(:disabled) {
+      background-color: #e50914;
+      color: white;
+      box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+      transform: translateY(-2px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      border-color: #555;
+      color: #555;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  }
+}

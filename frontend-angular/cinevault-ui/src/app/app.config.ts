@@ -1,13 +1,13 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http'; // 1. IMPORT THIS
-
 import { routes } from './app.routes';
+import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http'; 
+import { authInterceptor } from './core/interceptors/auth-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes),
-    provideHttpClient() // 2. ADD THIS LINE HERE
+    // This line forces Angular to use your Interceptor on EVERY single request!
+    provideHttpClient(withInterceptors([authInterceptor]), withFetch()) 
   ]
 };
