@@ -1,53 +1,39 @@
 import { Injectable } from '@angular/core';
-import { Movie } from '../models/movie.model';
+import { HttpClient } from '@angular/common/http'; // Import the internet tool
+import { Observable } from 'rxjs';
 
-const VAULT_STORAGE_KEY = 'cinevault_vault';
+// Match this interface exactly to your Java VaultItem model!
+export interface VaultItem {
+  id: number;
+  title: string;
+  posterPath: string;
+  voteAverage: number;
+  releaseDate: string;
+  mediaType: string;
+}
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class VaultService {
-  getVaultMovies(): Movie[] {
-    const storedMovies = localStorage.getItem(VAULT_STORAGE_KEY);
+  // The exact home address of our Spring Boot Controller gateway
+  private apiUrl = 'http://localhost:8080/api/vault';
 
-    if (!storedMovies) {
-      return [];
-    }
+  // Inject HttpClient via the constructor constructor
+  constructor(private http: HttpClient) {}
 
-    return JSON.parse(storedMovies) as Movie[];
+  // 1. Fetch all items from the MySQL database through Java
+  getVaultItems(): Observable<VaultItem[]> {
+    return this.http.get<VaultItem[]>(this.apiUrl);
   }
 
-  addToVault(movie: Movie): void {
-    const currentVault = this.getVaultMovies();
-    const movieAlreadyExists = currentVault.some(
-      (vaultMovie) => vaultMovie.id === movie.id
-    );
-
-    if (movieAlreadyExists) {
-      return;
-    }
-
-    const updatedVault = [...currentVault, movie];
-    localStorage.setItem(VAULT_STORAGE_KEY, JSON.stringify(updatedVault));
+  // 2. Push a new movie to be saved inside MySQL
+  addToVault(item: VaultItem): Observable<VaultItem> {
+    return this.http.post<VaultItem>(this.apiUrl, item);
   }
 
-// Checks if a movie ID already exists in the vault array
-    isInVault(movieId: number | string): boolean {
-    // 1. We call getVaultMovies() instead of looking for a variable
-      const currentVault = this.getVaultMovies();
-    
-    // 2. Now TypeScript knows exactly what 'movie' is!
-      return currentVault.some(movie => movie.id === movieId);
-  }
-
-  removeFromVault(movieId: number): void {
-    const currentVault = this.getVaultMovies();
-    const updatedVault = currentVault.filter((movie) => movie.id !== movieId);
-
-    localStorage.setItem(VAULT_STORAGE_KEY, JSON.stringify(updatedVault));
-  }
-
-  isMovieInVault(movieId: number): boolean {
-    return this.getVaultMovies().some((movie) => movie.id === movieId);
+  // 3. Remove a movie permanently from the database using its ID
+  removeFromVault(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
