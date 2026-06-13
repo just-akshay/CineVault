@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-// Add one more '../' to step cleanly out of the features tree into the app root
 import { MediaCardComponent } from '../../../../shared/components/media-card/media-card';
+import { VaultService,VaultItem } from '../../../../core/services/vault-service';
+
 @Component({
   selector: 'app-vault-page',
   standalone: true,
@@ -11,31 +12,41 @@ import { MediaCardComponent } from '../../../../shared/components/media-card/med
   styleUrls: ['./vault-page.scss']
 })
 export class VaultPageComponent implements OnInit {
-  vaultItems: any[] = [];
+  vaultItems: VaultItem[] = [];
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private vaultService:VaultService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadVault();
   }
 
   loadVault(): void {
-    // Extract items safely and parse them into a live array
-    this.vaultItems = JSON.parse(localStorage.getItem('cinevault_items') || '[]');
-    this.cdr.detectChanges();
+    this.vaultService.getVaultItems().subscribe({
+      // 2. Explicitly type 'data' as an array of VaultItems to satisfy strict mode
+      next: (data: VaultItem[]) => {
+        this.vaultItems = data;
+        this.cdr.detectChanges();
+      },
+      // 3. Explicitly type 'err' as 'any' to satisfy strict mode
+      error: (err: any) => {
+        console.error('Failed to get database vault items:', err);
+      }
+    });
   }
 
   removeFromVault(eventId: number): void {
-    // 1. Fetch your current locally cached vault assets array
-    let vault = JSON.parse(localStorage.getItem('cinevault_items') || '[]');
-    
-    // 2. Filter out the targeted item using strict numeric evaluation
-    vault = vault.filter((item: any) => Number(item.id) !== Number(eventId));
-    
-    // 3. Write the updated array back to your local storage partition
-    localStorage.setItem('cinevault_items', JSON.stringify(vault));
-    
-    // 4. Trigger a clean re-render of your asset grid layout instantly
-    this.loadVault(); 
+    this.vaultService.removeFromVault(eventId).subscribe({
+      next: () => {
+        console.log(`Successfully deleted item ${eventId} from database`);
+        this.loadVault(); 
+      },
+      // 4. Explicitly type 'err' as 'any' here as well
+      error: (err: any) => {
+        console.error('Failed to delete item from database:', err);
+      }
+    });
   }
 }
