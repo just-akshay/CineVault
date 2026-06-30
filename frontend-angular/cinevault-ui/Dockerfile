@@ -8,6 +8,11 @@ RUN npm run build --prod
 
 # Stage 2: Serve the app with Nginx
 FROM nginx:alpine
-# Copy the built files from the build stage
-COPY --from=build /app/dist/cinevault-ui /usr/share/nginx/html
+
+# Copy the build output from the browser folder to Nginx's html folder
+COPY --from=build /app/dist/cinevault-ui/browser /usr/share/nginx/html
+
+# Expose port 80
 EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
