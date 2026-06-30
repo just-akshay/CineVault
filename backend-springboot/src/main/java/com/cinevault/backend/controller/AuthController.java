@@ -17,7 +17,7 @@ import com.cinevault.backend.util.JwtUtil;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:4200") // <-- ADD THIS EXACT LINE
+@CrossOrigin(origins = "https://cinevault-frontend-cvsf.onrender.com") // <-- ADD THIS EXACT LINE
 public class AuthController {
 
     @Autowired

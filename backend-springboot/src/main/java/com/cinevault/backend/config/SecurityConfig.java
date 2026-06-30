@@ -54,7 +54,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); 
+        configuration.setAllowedOrigins(Arrays.asList("https://cinevault-frontend-cvsf.onrender.com")); 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // Explicitly allow the Authorization header!
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type")); 
