@@ -49,7 +49,7 @@ export class MovieService {
     
     // 3. Combine it normally WITHOUT encodeURIComponent
     const tmdbUrl = `https://api.themoviedb.org/3/discover/movie?${queryString}`;
-    const finalUrl = `https://corsproxy.io/?${tmdbUrl}`;
+    const finalUrl = `https://api.themoviedb.org/3${tmdbUrl}`;
 
     return this.http.get(finalUrl);
   }
