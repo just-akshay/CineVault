@@ -1,0 +1,10 @@
+
+services:
+  backend:
+    build: ./backend-springboot
+    ports: ["8080:8080"]
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+  frontend:
+    build: ./frontend-angular/cinevault-ui
+    ports: ["80:80"]
