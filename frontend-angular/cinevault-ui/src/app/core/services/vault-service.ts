@@ -17,7 +17,7 @@ export interface VaultItem {
 })
 export class VaultService {
   // The exact home address of our Spring Boot Controller gateway
-  private apiUrl = 'http://localhost:8080/api/vault';
+  private apiUrl = 'https://cinevault-backnd.onrender.com/api/vault'; // Replace with your actual backend URL
 
   // Inject HttpClient via the constructor constructor
   constructor(private http: HttpClient) {}

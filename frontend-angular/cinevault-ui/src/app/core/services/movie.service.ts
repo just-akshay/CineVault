@@ -21,13 +21,13 @@ export class MovieService {
 
   private trendingTvCache$!: Observable<Movie[]>;
   private popularTvCache$!: Observable<Movie[]>;
-  private localBackendUrl = 'http://localhost:8080/api/vibe';
+  private localBackendUrl = 'https://cinevault-backnd.onrender.com/api/vibe/search'; // Replace with your actual backend URL
   constructor(private http: HttpClient) {}
 
   searchByVibe(vibe: string): Observable<any> {
   // 1. The URL must include the full path: /api/vibe/search
   // 2. You must pass an OBJECT { vibe: ... } to match the @RequestBody Map in Java
-  return this.http.post('http://localhost:8080/api/vibe/search', { vibe: vibe }, { responseType: 'text' });
+  return this.http.post('https://cinevault-backnd.onrender.com/api/vibe/search', { vibe: vibe }, { responseType: 'text' });
 }
 
   discoverMoviesByFilters(filters: any): Observable<any> {

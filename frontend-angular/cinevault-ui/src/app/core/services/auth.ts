@@ -7,7 +7,7 @@ import { Observable, tap, BehaviorSubject } from 'rxjs';
 })
 export class AuthService {
   // Make sure this matches your Spring Boot port!
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = 'https://cinevault-backend.onrender.com/api/auth';
 
   // This acts like a live broadcast tower. When a user logs in, it instantly tells the Navbar to change its buttons!
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
