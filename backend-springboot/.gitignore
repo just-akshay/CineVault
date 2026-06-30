@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# --- Added for Frontend ---
+**/node_modules
+**/dist
+npm-debug.log
+yarn-error.log
+.angular/

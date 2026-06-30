@@ -9,6 +9,20 @@
   &:hover .nav-arrow {
     opacity: 1;
   }
+
+  /* THE FIX: A permanent, tall gradient at the bottom of the entire carousel */
+  /* This guarantees a smooth melt into the rest of the homepage */
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; /* -1px prevents microscopic rendering gaps */
+    left: 0;
+    width: 100%;
+    height: 250px; /* Much taller for a cinematic fade */
+    background: linear-gradient(to top, #0d0d12 0%, rgba(13, 13, 18, 0.8) 30%, transparent 100%);
+    pointer-events: none; /* Ensures you can still click the dots */
+    z-index: 5; /* Keeps the fade above the slides */
+  }
 }
 
 .hero-slide {
@@ -32,9 +46,9 @@
   &__overlay {
     position: absolute;
     inset: 0;
-    // Dark fade on the left so text is readable, dark fade on bottom to blend into the page
-    background: linear-gradient(to right, rgba(13, 13, 18, 0.9) 0%, rgba(13, 13, 18, 0.2) 50%),
-                linear-gradient(to top, #0d0d12 0%, transparent 20%);
+    // Removed the bottom fade from here to prevent clashing. 
+    // Now this strictly darkens the left side so your text pops.
+    background: linear-gradient(to right, rgba(13, 13, 18, 0.95) 0%, rgba(13, 13, 18, 0.4) 40%, transparent 100%);
   }
 
   &__content {
@@ -43,7 +57,7 @@
     left: 5%;
     max-width: 600px;
     color: white;
-    z-index: 3;
+    z-index: 6; /* Lifted above the new bottom fade so text doesn't get dark */
 
     @media (max-width: 768px) {
       bottom: 15%;

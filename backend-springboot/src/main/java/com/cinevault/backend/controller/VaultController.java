@@ -1,9 +1,11 @@
 package com.cinevault.backend.controller;
 
+import java.security.Principal;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.DeleteMapping; // <-- IMPORT THIS
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,33 +16,27 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cinevault.backend.model.VaultItem;
 import com.cinevault.backend.service.VaultItemService;
 
-@RestController // Tells Spring Boot that this class is an open network gateway
-@RequestMapping("/api/vault") // Anchors the base URL pathway for this entire controller
-@CrossOrigin(origins = "http://localhost:4200") // Crucial: Allows your Angular app on port 4200 to securely talk to Java!
+@RestController
+@RequestMapping("/api/vault")
+@CrossOrigin(origins = "http://localhost:4200")
 public class VaultController {
 
-    private final VaultItemService service;
+    @Autowired
+    private VaultItemService vaultItemService;
 
-    // Inject our business logic service layer
-    public VaultController(VaultItemService service) {
-        this.service = service;
-    }
-
-    // 1. GET: http://localhost:8080/api/vault
     @GetMapping
-    public List<VaultItem> getVault() {
-        return service.getAllVaultItems();
+    public List<VaultItem> getVault(Principal principal) {
+        // principal.getName() magically pulls the username straight out of the JWT!
+        return vaultItemService.getVaultItems(principal.getName());
     }
 
-    // 2. POST: http://localhost:8080/api/vault
     @PostMapping
-    public VaultItem addToVault(@RequestBody VaultItem item) {
-        return service.saveToVault(item);
+    public VaultItem addToVault(@RequestBody VaultItem item, Principal principal) {
+        return vaultItemService.addVaultItem(item, principal.getName());
     }
 
-    // 3. DELETE: http://localhost:8080/api/vault/12345
     @DeleteMapping("/{id}")
-    public void deleteFromVault(@PathVariable Long id) {
-        service.removeFromVault(id);
+    public void removeFromVault(@PathVariable Long id) {
+        vaultItemService.deleteVaultItem(id);
     }
 }

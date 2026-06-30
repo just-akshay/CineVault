@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders} from '@angular/common/http'; 
 import { Observable, map, shareReplay,of } from 'rxjs'; // Added shareReplay
 import { TMDB_CONFIG } from '../constants/tmdb.constants';
 import { Movie, TmdbResponse } from '../models/movie.model';
+import { HttpParams } from '@angular/common/http'; // Make sure this is imported at the top 
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,38 @@ export class MovieService {
 
   private trendingTvCache$!: Observable<Movie[]>;
   private popularTvCache$!: Observable<Movie[]>;
+  private localBackendUrl = 'http://localhost:8080/api/vibe';
   constructor(private http: HttpClient) {}
+
+  searchByVibe(vibe: string): Observable<any> {
+  // 1. The URL must include the full path: /api/vibe/search
+  // 2. You must pass an OBJECT { vibe: ... } to match the @RequestBody Map in Java
+  return this.http.post('http://localhost:8080/api/vibe/search', { vibe: vibe }, { responseType: 'text' });
+}
+
+  discoverMoviesByFilters(filters: any): Observable<any> {
+    // 1. ⚠️ REPLACE THIS STRING WITH YOUR REAL 32-CHARACTER TMDB KEY
+    const tmdbApiKey = '2c82ce7a1725b7245e0fb2dacdd019ba'; 
+
+    let params = new HttpParams().set('api_key', tmdbApiKey);
+
+    if (filters.with_genres) {
+      params = params.set('with_genres', filters.with_genres);
+    }
+    if (filters.primary_release_year) {
+      params = params.set('primary_release_year', filters.primary_release_year);
+    }
+    params = params.set('sort_by', 'popularity.desc');
+
+    // 2. Build the exact query string
+    const queryString = params.toString();
+    
+    // 3. Combine it normally WITHOUT encodeURIComponent
+    const tmdbUrl = `https://api.themoviedb.org/3/discover/movie?${queryString}`;
+    const finalUrl = `https://corsproxy.io/?${tmdbUrl}`;
+
+    return this.http.get(finalUrl);
+  }
 
   getTrendingMovies(): Observable<Movie[]> {
     if (!this.trendingCache$) {

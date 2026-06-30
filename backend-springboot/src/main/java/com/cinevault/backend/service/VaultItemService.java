@@ -2,33 +2,39 @@ package com.cinevault.backend.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cinevault.backend.model.User;
 import com.cinevault.backend.model.VaultItem;
+import com.cinevault.backend.repository.UserRepository;
 import com.cinevault.backend.repository.VaultItemRepository;
 
-@Service // Tells Spring Boot to manage this class as our master business logic unit
+@Service
 public class VaultItemService {
 
-    // 1. Hook up our automated database hands (Dependency Injection)
-    private final VaultItemRepository repository;
+    @Autowired
+    private VaultItemRepository vaultRepository;
 
-    public VaultItemService(VaultItemRepository repository) {
-        this.repository = repository;
+    @Autowired
+    private UserRepository userRepository;
+
+    // 1. Fetch only the movies owned by this username
+    public List<VaultItem> getVaultItems(String username) {
+        return vaultRepository.findByUser_Username(username);
     }
 
-    // 2. Business Logic: Fetch everything currently stored in the MySQL vault
-    public List<VaultItem> getAllVaultItems() {
-        return repository.findAll();
+    // 2. Find the user in the DB, attach them to the movie, and save it
+    public VaultItem addVaultItem(VaultItem item, String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+        
+        item.setUser(user);
+        return vaultRepository.save(item);
     }
 
-    // 3. Business Logic: Save a fresh movie asset directly into the database
-    public VaultItem saveToVault(VaultItem item) {
-        return repository.save(item);
-    }
-
-    // 4. Business Logic: Delete a movie completely out of the database using its ID
-    public void removeFromVault(Long id) {
-        repository.deleteById(id);
+    // (Keep your delete method as it is, or we can secure it later!)
+    public void deleteVaultItem(Long id) {
+        vaultRepository.deleteById(id);
     }
 }
